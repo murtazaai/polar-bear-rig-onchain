@@ -1,0 +1,30 @@
+# ── Cargo / Rust ──────────────────────────────────────────────────
+/target/
+**/*.rs.bk
+Cargo.lock
+
+# ── Environment / secrets ─────────────────────────────────────────
+.env
+/keys/
+*.enc
+
+# ── IDE / editor ──────────────────────────────────────────────────
+.vscode/
+.idea/
+*.code-workspace
+.cursor/
+
+# ── Logs / databases ──────────────────────────────────────────────
+/logs/
+*.log
+*.log-*
+*.sqlite
+*.db
+
+# ── OS artifacts ──────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ── Mutation testing ──────────────────────────────────────────────
+/mutants.out
+/mutants.out.old

@@ -1,0 +1,24 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug polar-bear-rig-onchain (full)",
+      "program": "${workspaceFolder}/target/debug/polar-bear-rig-onchain",
+      "args": ["--mode", "full"],
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "RUST_LOG": "polar_bear_rig_onchain=debug"
+      }
+    },
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug polar-bear-rig-onchain (signer demo)",
+      "program": "${workspaceFolder}/target/debug/polar-bear-rig-onchain",
+      "args": ["--mode", "signer"],
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}
