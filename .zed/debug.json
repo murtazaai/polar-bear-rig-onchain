@@ -1,24 +1,39 @@
-{
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "type": "lldb",
-      "request": "launch",
-      "name": "Debug polar-bear-rig-onchain (full)",
-      "program": "${workspaceFolder}/target/debug/polar-bear-rig-onchain",
-      "args": ["--mode", "full"],
-      "cwd": "${workspaceFolder}",
-      "env": {
-        "RUST_LOG": "polar_bear_rig_onchain=debug"
-      }
+// Project-local debug tasks
+//
+// For more documentation on how to configure debug tasks,
+// see: https://zed.dev/docs/debugger
+[
+  {
+    "label": "Build & Debug native binary",
+    "build": {
+      "command": "cargo",
+      "args": ["build"],
+      "params": ["--mode", "full"],
     },
-    {
-      "type": "lldb",
-      "request": "launch",
-      "name": "Debug polar-bear-rig-onchain (signer demo)",
-      "program": "${workspaceFolder}/target/debug/polar-bear-rig-onchain",
-      "args": ["--mode", "signer"],
-      "cwd": "${workspaceFolder}"
-    }
-  ]
-}
+    "type": "lldb",
+    "name": "Debug polar-bear-rig-onchain (full)",
+    "program": "$ZED_WORKTREE_ROOT/target/debug/binary",
+    // sourceLanguages is required for CodeLLDB (not GDB) when using Rust
+    "sourceLanguages": ["rust"],
+    "request": "launch",
+    "adapter": "CodeLLDB",
+  },
+  {
+    "label": "Debug polar-bear-rig-onchain (signer demo)",
+    "run": {
+      "command": "cargo",
+      "args": ["run"],
+      "params": ["--mode", "full"],
+    },
+    "type": "lldb",
+    "name": "Debug polar-bear-rig-onchain (signer demo)",
+    "program": "$ZED_WORKTREE_ROOT/target/debug/binary",
+    // sourceLanguages is required for CodeLLDB (not GDB) when using Rust
+    "sourceLanguages": ["rust"],
+    "request": "launch",
+    "adapter": "CodeLLDB",
+    "env": {
+      "RUST_LOG": "polar_bear_rig_onchain=debug",
+    },
+  },
+]
