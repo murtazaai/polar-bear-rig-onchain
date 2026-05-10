@@ -22,7 +22,7 @@ isolation audit log, and full `rig-core` PEV-loop governance.
 - Structured the codebase as a lib + bin crate (matching the `polar-bear-rig-hft`
   standard) with `src/onchain/`, `src/agent/`, and `src/config.rs` modules.
 - Upgraded from the unsafe `thread_local!` pattern to `tokio::task_local!` via
-  `with_signer(signer, f)` — the correct async-safe signer isolation model
+  `with_signer(signer, f)` - the correct async-safe signer isolation model
   described in the `rig-onchain-kit` documentation.
 - Fixed the `rig-core` 0.36+ client API: `Client::new(api_key)?` (fallible),
   both `CompletionClient` and `ProviderClient` imported for `.agent()` to
@@ -31,7 +31,7 @@ isolation audit log, and full `rig-core` PEV-loop governance.
   `JupiterQuoteTool` (Jupiter V6 read-only GET, `dry_run = true` baked in with
   a runtime `assert!` guard), `SignerIsolationTool` (snapshots the active
   task-local context for the Reactor GUI audit trail).
-- Added `IsolationReport` — serialisable JSON audit record of the signer
+- Added `IsolationReport` - serialisable JSON audit record of the signer
   lifecycle (context\_id, pubkey, created\_at, boundary\_sealed flag).
 - Implemented `clap`-driven CLI with `--mode [full|balance|quote|signer]` and
   `--wallet` / `--amount` flags, matching the `polar-bear-rig-hft` UX pattern.
@@ -44,7 +44,7 @@ isolation audit log, and full `rig-core` PEV-loop governance.
 - Fully compilable, zero-warning Rust project (`cargo clippy -D warnings`).
 - `tokio::task_local!` isolation verified across three concurrent async tasks
   in `tests/test_signer_context.rs`.
-- `IsolationReport` JSON emitted at the end of every pipeline run — direct
+- `IsolationReport` JSON emitted at the end of every pipeline run - direct
   input to the Reactor GUI audit trail.
 - Jupiter V6 dry-run quote with route breakdown and price impact log.
 - Structured `tracing` output with module-tagged events at every pipeline step.

@@ -1,4 +1,4 @@
-//! Jupiter V6 quote API — dry-run only.
+//! Jupiter V6 quote API - dry-run only.
 //!
 //! Calls the Jupiter Aggregator V6 `/quote` endpoint to fetch the best swap
 //! route and expected output amount for a given SOL → USDC swap. **No swap
@@ -28,10 +28,10 @@ use crate::onchain::types::Lamports;
 /// Jupiter V6 quote API endpoint.
 const JUPITER_QUOTE_URL: &str = "https://quote-api.jup.ag/v6/quote";
 
-/// Wrapped SOL mint address (mainnet — used for price discovery; no txns sent).
+/// Wrapped SOL mint address (mainnet - used for price discovery; no txns sent).
 pub const SOL_MINT: &str = "So11111111111111111111111111111111111111112";
 
-/// USDC mint address (mainnet — used for price discovery; no txns sent).
+/// USDC mint address (mainnet - used for price discovery; no txns sent).
 pub const USDC_MINT: &str = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
 
 /// Default slippage tolerance for HFT quote requests (50 bps = 0.5 %).
@@ -39,7 +39,7 @@ pub const DEFAULT_SLIPPAGE_BPS: u16 = 50;
 
 // ── Client ────────────────────────────────────────────────────────────────────
 
-/// Jupiter quote client — dry-run mode only.
+/// Jupiter quote client - dry-run mode only.
 ///
 /// [`JupiterClient::dry_run`] is the only constructor; the `dry_run` flag is
 /// baked in. A `debug_assert!` in [`JupiterClient::get_quote`] fires
@@ -63,7 +63,7 @@ impl JupiterClient {
     pub fn dry_run() -> Self {
         info!(
             quote_url = %JUPITER_QUOTE_URL,
-            "[JupiterClient::dry_run] client initialised — DRY-RUN mode (no transactions submitted)"
+            "[JupiterClient::dry_run] client initialised - DRY-RUN mode (no transactions submitted)"
         );
         Self {
             http: Client::new(),
@@ -74,16 +74,16 @@ impl JupiterClient {
     /// Fetch the best swap quote from Jupiter V6 for a given token pair and
     /// amount.
     ///
-    /// This is a read-only GET to `/v6/quote` — no transaction is constructed
+    /// This is a read-only GET to `/v6/quote` - no transaction is constructed
     /// and no wallet is accessed.
     ///
     /// # Arguments
     ///
-    /// * `input_mint`   — Base-58 mint address of the token being sold.
-    /// * `output_mint`  — Base-58 mint address of the token being bought.
-    /// * `amount`       — Amount in the smallest unit of `input_mint`
+    /// * `input_mint`   - Base-58 mint address of the token being sold.
+    /// * `output_mint`  - Base-58 mint address of the token being bought.
+    /// * `amount`       - Amount in the smallest unit of `input_mint`
     ///   (lamports for SOL).
-    /// * `slippage_bps` — Allowed slippage in basis points (100 bps = 1 %).
+    /// * `slippage_bps` - Allowed slippage in basis points (100 bps = 1 %).
     ///
     /// # Errors
     ///
@@ -123,7 +123,7 @@ impl JupiterClient {
             .header("Accept", "application/json")
             .send()
             .await
-            .context("Jupiter API request failed — check network connectivity")?;
+            .context("Jupiter API request failed - check network connectivity")?;
 
         if !response.status().is_success() {
             let status = response.status();
@@ -144,7 +144,7 @@ impl JupiterClient {
             price_impact   = %quote.price_impact_pct,
             routes         = quote.routes.len(),
             dry_run        = self.dry_run,
-            "[JupiterClient::get_quote] ✓ quote received [DRY-RUN — NOT executed]"
+            "[JupiterClient::get_quote] ✓ quote received [DRY-RUN - NOT executed]"
         );
 
         Ok(quote)
@@ -197,7 +197,7 @@ struct SwapInfoRaw {
 
 // ── Domain types (serialisable for rig-core tool output) ─────────────────────
 
-/// Cleaned Jupiter quote — serialisable as a `rig-core` tool response.
+/// Cleaned Jupiter quote - serialisable as a `rig-core` tool response.
 #[derive(Debug, Clone, Serialize)]
 pub struct JupiterQuote {
     /// Input token mint address.
@@ -216,7 +216,7 @@ pub struct JupiterQuote {
     pub slippage_bps: u16,
     /// Individual swap route legs selected by the Jupiter aggregator.
     pub routes: Vec<SwapRoute>,
-    /// Always `true` in this crate — guarantees no swap was executed.
+    /// Always `true` in this crate - guarantees no swap was executed.
     pub dry_run: bool,
     /// Solana slot at which the quote was valid.
     pub context_slot: Option<u64>,

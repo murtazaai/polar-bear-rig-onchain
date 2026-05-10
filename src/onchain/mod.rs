@@ -2,10 +2,10 @@
 //!
 //! Exposes two public entry points consumed by [`crate::main`]:
 //!
-//! * [`execute_pipeline`] — wraps a Solana balance query and a Jupiter quote
+//! * [`execute_pipeline`] - wraps a Solana balance query and a Jupiter quote
 //!   inside an isolated [`signer::LocalSolanaSigner`] context and returns an
 //!   [`OnchainResult`].
-//! * [`demo_signer`] — spawns three concurrent tasks to demonstrate that the
+//! * [`demo_signer`] - spawns three concurrent tasks to demonstrate that the
 //!   task-local signer storage is fully isolated per Tokio task.
 //!
 //! ## Security boundary
@@ -27,7 +27,7 @@ use tracing::info;
 
 use crate::config::Config;
 use balance::{BalanceResult, SolanaClient};
-use jupiter::{JupiterClient, JupiterQuote, DEFAULT_SLIPPAGE_BPS, SOL_MINT, USDC_MINT};
+use jupiter::{DEFAULT_SLIPPAGE_BPS, JupiterClient, JupiterQuote, SOL_MINT, USDC_MINT};
 use signer::{LocalSolanaSigner, with_signer};
 use types::Lamports;
 
@@ -47,8 +47,8 @@ pub struct OnchainResult {
 ///
 /// # Arguments
 ///
-/// * `cfg`    — Runtime configuration (provides wallet address and RPC URL).
-/// * `amount` — SOL amount to quote (in SOL units, e.g. `0.1`).
+/// * `cfg`    - Runtime configuration (provides wallet address and RPC URL).
+/// * `amount` - SOL amount to quote (in SOL units, e.g. `0.1`).
 ///
 /// # Errors
 ///
@@ -65,10 +65,7 @@ pub async fn execute_pipeline(cfg: &Config, amount: f64) -> Result<OnchainResult
 
         // ── Balance query ─────────────────────────────────────────
         let balance = solana.query_balance(&cfg.wallet_address)?;
-        info!(
-            sol  = balance.sol,
-            "[ONCHAIN] balance query complete"
-        );
+        info!(sol = balance.sol, "[ONCHAIN] balance query complete");
 
         // ── Jupiter quote (dry-run) ───────────────────────────────
         let lamports = Lamports::from_sol(amount).0;

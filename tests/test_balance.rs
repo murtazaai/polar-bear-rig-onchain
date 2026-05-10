@@ -1,7 +1,7 @@
 //! Integration tests for [`polar_bear_rig_onchain::onchain::balance`].
 //!
 //! Verifies conversion helpers and display formatting. Network calls are
-//! not made in these tests — all assertions operate on pure Rust code paths.
+//! not made in these tests - all assertions operate on pure Rust code paths.
 
 use polar_bear_rig_onchain::onchain::types::Lamports;
 
@@ -33,12 +33,19 @@ fn test_lamports_from_sol_round_trip() {
 #[test]
 fn test_lamports_display_zero() {
     let display = format!("{}", Lamports(0));
-    assert!(display.contains("0 lamports"), "display must mention lamports");
+    assert!(
+        display.contains("0 lamports"),
+        "display must mention lamports"
+    );
     assert!(display.contains("SOL"), "display must mention SOL");
 }
 
 /// `Lamports::PER_SOL` must equal exactly 1 000 000 000.
 #[test]
 fn test_lamports_per_sol_constant() {
-    assert_eq!(Lamports::PER_SOL, 1_000_000_000, "PER_SOL constant must be 10^9");
+    assert_eq!(
+        Lamports::PER_SOL,
+        1_000_000_000,
+        "PER_SOL constant must be 10^9"
+    );
 }

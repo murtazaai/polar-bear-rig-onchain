@@ -8,7 +8,7 @@
 //!
 //! | Variable | Required | Default |
 //! |---|---|---|
-//! | `ANTHROPIC_API_KEY` | ✅ | — |
+//! | `ANTHROPIC_API_KEY` | ✅ | - |
 //! | `SOLANA_RPC_URL` | ❌ | `https://api.devnet.solana.com` |
 //! | `WALLET_ADDRESS` | ❌ | (public devnet address) |
 //! | `DRY_RUN` | ❌ | `true` |
@@ -23,7 +23,7 @@ pub const DEFAULT_DEVNET_WALLET: &str = "4Nd1mBQtrMJVYVfKf2PX99kkXz36o2gWHa9zSX6
 /// Global runtime configuration for the on-chain agent platform.
 ///
 /// Constructed once at startup and shared by reference across all subsystems.
-/// Cloning is cheap — all fields are either `String` or `bool`.
+/// Cloning is cheap - all fields are either `String` or `bool`.
 #[derive(Debug, Clone)]
 pub struct Config {
     /// Anthropic API key forwarded to every `rig-core` client.
@@ -35,7 +35,7 @@ pub struct Config {
     /// Base-58 encoded Solana wallet address to query.
     ///
     /// This address is used for balance queries only. No private key is
-    /// required — the demo generates an ephemeral keypair for signing context.
+    /// required - the demo generates an ephemeral keypair for signing context.
     pub wallet_address: String,
 
     /// When `true` (the default), all on-chain operations are simulated and no
@@ -67,7 +67,7 @@ impl Config {
     pub fn from_env() -> Result<Self> {
         Ok(Self {
             anthropic_api_key: std::env::var("ANTHROPIC_API_KEY")
-                .context("ANTHROPIC_API_KEY not set — copy .env.example to .env")?,
+                .context("ANTHROPIC_API_KEY not set - copy .env.example to .env")?,
             solana_rpc_url: std::env::var("SOLANA_RPC_URL")
                 .unwrap_or_else(|_| "https://api.devnet.solana.com".to_string()),
             wallet_address: std::env::var("WALLET_ADDRESS")

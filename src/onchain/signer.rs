@@ -1,4 +1,4 @@
-//! SignerContext — task-local keypair isolation for secure on-chain operations.
+//! SignerContext - task-local keypair isolation for secure on-chain operations.
 //!
 //! Implements the security boundary described in the `rig-onchain-kit`
 //! documentation: every async on-chain call must be wrapped in
@@ -10,7 +10,7 @@
 //! In an async runtime multiple trades can be in-flight simultaneously on a
 //! shared thread pool. Using a `thread_local!` signer would risk one task's
 //! keypair leaking into another task that runs on the same thread. A
-//! `task_local!` slot is scoped to the *task*, not the thread — it is
+//! `task_local!` slot is scoped to the *task*, not the thread - it is
 //! automatically removed when the task's future completes, regardless of which
 //! OS thread executed it.
 //!
@@ -34,7 +34,7 @@ use tracing::info;
 // ── Task-local storage ────────────────────────────────────────────────────────
 
 // Declared with a regular line comment rather than a doc comment (///)
-// because `tokio::task_local!` is a macro invocation — rustdoc cannot attach
+// because `tokio::task_local!` is a macro invocation - rustdoc cannot attach
 // outer doc attributes to macro call sites, which would trigger the
 // `unused_doc_comments` lint.
 tokio::task_local! {
@@ -49,11 +49,11 @@ tokio::task_local! {
 /// not require copying the keypair.
 #[derive(Debug)]
 pub struct SignerContextInner {
-    /// Random keypair — never logged in full; only the public key is visible.
+    /// Random keypair - never logged in full; only the public key is visible.
     keypair: Keypair,
     /// Human-readable label identifying the agent task that owns this context.
     pub label: String,
-    /// Base-58 public key — safe to log and serialise.
+    /// Base-58 public key - safe to log and serialise.
     pub pubkey: String,
     /// Unique identifier for this context instance (16-char random hex).
     pub context_id: String,
@@ -192,7 +192,7 @@ where
     let arc = Arc::new(signer.inner);
     let result = CURRENT_SIGNER.scope(arc, f()).await;
 
-    info!(%label, %pubkey, %context_id, "[SignerContext] task-local signer evicted — boundary sealed ✓");
+    info!(%label, %pubkey, %context_id, "[SignerContext] task-local signer evicted - boundary sealed ✓");
 
     result
 }
@@ -201,7 +201,7 @@ where
 
 /// Public-metadata snapshot of an active [`SignerContextInner`].
 ///
-/// Contains no private key material — safe to log, serialise, and audit.
+/// Contains no private key material - safe to log, serialise, and audit.
 #[derive(Debug, Clone, Serialize)]
 pub struct SignerSnapshot {
     /// Human-readable label of the owning agent task.
@@ -217,7 +217,7 @@ pub struct SignerSnapshot {
 /// Capture a snapshot of the active task-local signer context.
 ///
 /// Returns `None` if no signer is installed for the current Tokio task (which
-/// indicates a programming error — all on-chain work must be wrapped in
+/// indicates a programming error - all on-chain work must be wrapped in
 /// [`with_signer`]).
 #[must_use]
 pub fn snapshot_active() -> Option<SignerSnapshot> {
@@ -309,7 +309,7 @@ pub async fn demo_signer() -> Result<()> {
                 with_signer(signer, move || async move {
                     info!(task = i, %pubkey, "[SIGNER] task running in isolated context");
                     tokio::time::sleep(std::time::Duration::from_millis(10)).await;
-                    info!(task = i, "[SIGNER] task complete — signer isolated");
+                    info!(task = i, "[SIGNER] task complete - signer isolated");
                     Ok::<(), anyhow::Error>(())
                 })
                 .await

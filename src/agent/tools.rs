@@ -12,7 +12,7 @@
 //!
 //! The [`Tool`] trait uses `async fn` in trait syntax stabilised in Rust 1.75.
 //! [`rig::client::CompletionClient`] must be in scope to call `.agent()` on a
-//! rig-core 0.36+ Anthropic client — otherwise `E0599: no method named 'agent'`.
+//! rig-core 0.36+ Anthropic client - otherwise `E0599: no method named 'agent'`.
 
 use std::sync::Arc;
 
@@ -24,12 +24,12 @@ use serde::{Deserialize, Serialize};
 use serde_json::json;
 use tracing::info;
 
+use crate::onchain::types::Lamports;
 use crate::onchain::{
     balance::{BalanceResult, SolanaClient},
-    jupiter::{JupiterClient, JupiterQuote, DEFAULT_SLIPPAGE_BPS, SOL_MINT, USDC_MINT},
+    jupiter::{DEFAULT_SLIPPAGE_BPS, JupiterClient, JupiterQuote, SOL_MINT, USDC_MINT},
     signer::{SignerSnapshot, snapshot_active},
 };
-use crate::onchain::types::Lamports;
 
 // ── Tool 1: Solana balance ────────────────────────────────────────────────────
 
@@ -56,9 +56,9 @@ impl SolanaBalanceTool {
 impl Tool for SolanaBalanceTool {
     const NAME: &'static str = "solana_balance";
 
-    type Args   = BalanceArgs;
+    type Args = BalanceArgs;
     type Output = BalanceResult;
-    type Error  = ToolError;
+    type Error = ToolError;
 
     async fn definition(&self, _prompt: String) -> ToolDefinition {
         ToolDefinition {
@@ -117,16 +117,16 @@ impl JupiterQuoteTool {
 impl Tool for JupiterQuoteTool {
     const NAME: &'static str = "jupiter_quote";
 
-    type Args   = JupiterQuoteArgs;
+    type Args = JupiterQuoteArgs;
     type Output = JupiterQuote;
-    type Error  = ToolError;
+    type Error = ToolError;
 
     async fn definition(&self, _prompt: String) -> ToolDefinition {
         ToolDefinition {
             name: Self::NAME.to_string(),
             description: "Fetch a DRY-RUN SOL→USDC swap quote from Jupiter V6 aggregator. \
                 Returns expected output amount, price impact, and route breakdown. \
-                No transaction is constructed or submitted — this is quote-only."
+                No transaction is constructed or submitted - this is quote-only."
                 .to_string(),
             parameters: json!({
                 "type": "object",
@@ -152,7 +152,7 @@ impl Tool for JupiterQuoteTool {
         let slippage = args.slippage_bps.unwrap_or(DEFAULT_SLIPPAGE_BPS);
 
         info!(
-            sol_amount   = args.sol_amount,
+            sol_amount = args.sol_amount,
             lamports,
             slippage_bps = slippage,
             "[JupiterQuoteTool] tool invoked by rig-core agent"
@@ -170,7 +170,7 @@ impl Tool for JupiterQuoteTool {
 /// Arguments for [`SignerIsolationTool`].
 #[derive(Deserialize)]
 pub struct SignerIsolationArgs {
-    /// Identifier for the current agent task — used to label the audit record.
+    /// Identifier for the current agent task - used to label the audit record.
     pub task_id: String,
 }
 
@@ -194,9 +194,9 @@ pub struct SignerIsolationTool;
 impl Tool for SignerIsolationTool {
     const NAME: &'static str = "signer_isolation_log";
 
-    type Args   = SignerIsolationArgs;
+    type Args = SignerIsolationArgs;
     type Output = SignerIsolationOutput;
-    type Error  = ToolError;
+    type Error = ToolError;
 
     async fn definition(&self, _prompt: String) -> ToolDefinition {
         ToolDefinition {
@@ -228,12 +228,12 @@ impl Tool for SignerIsolationTool {
         let boundary_active = signer.is_some();
         let isolation_status = if boundary_active {
             format!(
-                "ISOLATED — SignerContext active for task '{}'. Boundary enforced.",
+                "ISOLATED - SignerContext active for task '{}'. Boundary enforced.",
                 args.task_id
             )
         } else {
             format!(
-                "WARNING — No active SignerContext for task '{}'. \
+                "WARNING - No active SignerContext for task '{}'. \
                  Task may be running outside a with_signer scope.",
                 args.task_id
             )

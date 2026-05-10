@@ -1,9 +1,9 @@
-//! Solana balance queries — devnet only.
+//! Solana balance queries - devnet only.
 //!
 //! Exposes [`SolanaClient`], a thin wrapper around
 //! [`solana_client::rpc_client::RpcClient`] that is permanently bound to
 //! the Solana devnet RPC URL. There is intentionally no `mainnet()` or
-//! `from_url()` constructor — this crate is a testnet-only
+//! `from_url()` constructor - this crate is a testnet-only
 //! repository, and the type system enforces that invariant.
 //!
 //! ## Pipeline position
@@ -49,7 +49,7 @@ impl SolanaClient {
     pub fn devnet() -> Self {
         info!(
             rpc_url = %DEVNET_RPC_URL,
-            "[SolanaClient::devnet] connecting to Solana devnet (testnet — no mainnet ops)"
+            "[SolanaClient::devnet] connecting to Solana devnet (testnet - no mainnet ops)"
         );
         Self {
             rpc: RpcClient::new(DEVNET_RPC_URL.to_string()),
@@ -59,11 +59,11 @@ impl SolanaClient {
     /// Query the SOL balance for a given base-58 wallet address.
     ///
     /// Returns a [`BalanceResult`] carrying lamports, SOL denomination, and
-    /// network tag — ready to be serialised into a `rig-core` tool response.
+    /// network tag - ready to be serialised into a `rig-core` tool response.
     ///
     /// # Arguments
     ///
-    /// * `address` — Base-58 encoded Solana wallet address to query.
+    /// * `address` - Base-58 encoded Solana wallet address to query.
     ///
     /// # Errors
     ///
@@ -116,7 +116,7 @@ impl SolanaClient {
 
 // ── Result type ───────────────────────────────────────────────────────────────
 
-/// Balance query result — serialisable for `rig-core` tool output.
+/// Balance query result - serialisable for `rig-core` tool output.
 #[derive(Debug, Clone, Serialize)]
 pub struct BalanceResult {
     /// Base-58 wallet address that was queried.

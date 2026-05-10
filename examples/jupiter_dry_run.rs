@@ -1,4 +1,4 @@
-//! `jupiter_dry_run` — fetch a dry-run Jupiter V6 swap quote and emit an
+//! `jupiter_dry_run` - fetch a dry-run Jupiter V6 swap quote and emit an
 //! isolation audit log.
 //!
 //! Wraps the quote call inside a [`with_signer`] scope to demonstrate the

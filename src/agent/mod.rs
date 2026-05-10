@@ -14,18 +14,14 @@
 //! Calling `.agent()` on `anthropic::Client` requires [`rig::client::CompletionClient`]
 //! in scope so the `.agent()` builder method resolves.
 //!
-//! `Client::new` is fallible in rig-core 0.36+ — always propagate with `?`.
+//! `Client::new` is fallible in rig-core 0.36+ - always propagate with `?`.
 
 pub mod tools;
 
 use std::sync::Arc;
 
 use anyhow::Result;
-use rig::{
-    client::CompletionClient,
-    completion::Prompt,
-    providers::anthropic,
-};
+use rig::{client::CompletionClient, completion::Prompt, providers::anthropic};
 
 use crate::config::Config;
 use crate::onchain::{balance::SolanaClient, jupiter::JupiterClient};
@@ -37,7 +33,7 @@ use tools::{JupiterQuoteTool, SignerIsolationTool, SolanaBalanceTool};
 /// the three-step PEV workflow the agent must follow.
 const AGENT_PREAMBLE: &str = "\
 You are an on-chain HFT agent for the polar-bear-rig-onchain pipeline. \
-You operate on Solana DEVNET only — you must NEVER reference or attempt mainnet operations.
+You operate on Solana DEVNET only - you must NEVER reference or attempt mainnet operations.
 
 Your task workflow is:
 1. PERCEIVE:  Receive wallet address and swap parameters.
@@ -76,7 +72,7 @@ pub fn build(
     solana: Arc<SolanaClient>,
     jupiter: Arc<JupiterClient>,
 ) -> Result<impl Prompt> {
-    // Client::new is fallible in rig-core 0.36+ — propagate with ?.
+    // Client::new is fallible in rig-core 0.36+ - propagate with ?.
     let client = anthropic::Client::new(&cfg.anthropic_api_key)?;
 
     // CompletionClient must be in scope for `.agent()` to resolve (rig-core ≥ 0.36).

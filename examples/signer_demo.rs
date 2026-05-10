@@ -1,4 +1,4 @@
-//! `signer_demo` — demonstrate `SignerContext` task-local isolation.
+//! `signer_demo` - demonstrate `SignerContext` task-local isolation.
 //!
 //! Spawns three concurrent Tokio tasks; each installs its own
 //! [`polar_bear_rig_onchain::onchain::signer::LocalSolanaSigner`] context and
@@ -19,7 +19,9 @@ use tracing_subscriber::EnvFilter;
 async fn main() -> Result<()> {
     dotenvy::dotenv().ok();
     tracing_subscriber::fmt()
-        .with_env_filter(EnvFilter::new("polar_bear_rig_onchain=info,signer_demo=info"))
+        .with_env_filter(EnvFilter::new(
+            "polar_bear_rig_onchain=info,signer_demo=info",
+        ))
         .init();
 
     info!("╔══════════════════════════════════════════════════════════╗");
@@ -42,7 +44,7 @@ async fn main() -> Result<()> {
                     assert!(snap.is_some(), "snapshot must be Some inside with_signer");
                     assert_eq!(snap.unwrap().pubkey, pubkey);
 
-                    info!(task = i, "task complete — signer context isolated ✓");
+                    info!(task = i, "task complete - signer context isolated ✓");
                     Ok::<(), anyhow::Error>(())
                 })
                 .await

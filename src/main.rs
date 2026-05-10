@@ -1,4 +1,4 @@
-//! `polar-bear-rig-onchain` — CLI entry point.
+//! `polar-bear-rig-onchain` - CLI entry point.
 //!
 //! **Polar Bear Systems** | Technology Lead: Murtaza Ali Imtiaz
 //!
@@ -31,7 +31,7 @@ use polar_bear_rig_onchain::{agent, config::Config, onchain};
 
 // ── CLI ───────────────────────────────────────────────────────────────────────
 
-/// CLI operating mode — selects which subsystem to exercise.
+/// CLI operating mode - selects which subsystem to exercise.
 #[derive(Debug, Clone, ValueEnum)]
 enum Mode {
     /// Run the full pipeline: SignerContext → balance → Jupiter quote → isolation log.
@@ -47,7 +47,9 @@ enum Mode {
 /// CLI arguments parsed by [`clap`].
 #[derive(Parser, Debug)]
 #[command(name = "polar-bear-rig-onchain")]
-#[command(about = "rig-onchain-kit agent: Solana balance → Jupiter swap (dry-run) — Polar Bear Systems")]
+#[command(
+    about = "rig-onchain-kit agent: Solana balance → Jupiter swap (dry-run) - Polar Bear Systems"
+)]
 struct Args {
     /// Operating mode (default: `full`).
     #[arg(short, long, default_value = "full")]
@@ -70,8 +72,7 @@ async fn main() -> Result<()> {
 
     tracing_subscriber::fmt()
         .with_env_filter(
-            EnvFilter::from_default_env()
-                .add_directive("polar_bear_rig_onchain=debug".parse()?),
+            EnvFilter::from_default_env().add_directive("polar_bear_rig_onchain=debug".parse()?),
         )
         .init();
 

@@ -55,7 +55,7 @@ The original `thread_local!` pattern is **unsafe** in an async runtime:
 
 - Tokio tasks can be *moved* between OS threads at any `await` point.
 - A `thread_local!` signer installed on thread T may be read by a different
-  task that later runs on thread T — data contamination.
+  task that later runs on thread T - data contamination.
 
 This repo uses `tokio::task_local!` via `with_signer(signer, f)`:
 
@@ -76,7 +76,7 @@ src/
 │   ├── mod.rs            build() → impl Prompt; rig-core agent assembly
 │   └── tools.rs          SolanaBalanceTool, JupiterQuoteTool, SignerIsolationTool
 └── onchain/
-    ├── mod.rs            execute_pipeline(), demo_signer() — public entry points
+    ├── mod.rs            execute_pipeline(), demo_signer() - public entry points
     ├── signer.rs         tokio::task_local! SignerContext; with_signer; IsolationReport
     ├── balance.rs        SolanaClient::devnet(); query_balance; BalanceResult
     ├── jupiter.rs        JupiterClient::dry_run(); get_quote; JupiterQuote

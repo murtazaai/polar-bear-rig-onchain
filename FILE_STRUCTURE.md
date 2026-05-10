@@ -45,7 +45,7 @@ polar-bear-rig-onchain/
 │   │   └── tools.rs         SolanaBalanceTool, JupiterQuoteTool, SignerIsolationTool
 │   │
 │   └── onchain/             On-chain execution layer
-│       ├── mod.rs           execute_pipeline(), demo_signer() — public entry points
+│       ├── mod.rs           execute_pipeline(), demo_signer() - public entry points
 │       ├── signer.rs        tokio::task_local! SignerContext; with_signer; IsolationReport
 │       ├── balance.rs       SolanaClient::devnet(); query_balance; BalanceResult
 │       ├── jupiter.rs       JupiterClient::dry_run(); get_quote; JupiterQuote

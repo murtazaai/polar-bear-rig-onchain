@@ -7,7 +7,7 @@
 A production-grade Rust implementation of the `rig-onchain-kit` on-chain agent
 pattern, powered by [Rig (ARC)](https://rig.rs). Demonstrates Solana devnet
 balance queries, Jupiter V6 dry-run swap quotes, and **task-local
-`SignerContext`** signer isolation via `tokio::task_local!` — the correct
+`SignerContext`** signer isolation via `tokio::task_local!` - the correct
 async-safe implementation of the `rig-onchain-kit` security boundary pattern.
 
 ---
@@ -87,7 +87,7 @@ cargo clippy --all-targets -- -D warnings
 
 Tokio tasks can be **moved between OS threads** at any `await` point. Using
 `thread_local!` would cause a signer installed on thread T to be visible to a
-different task that later runs on thread T — key contamination in a concurrent
+different task that later runs on thread T - key contamination in a concurrent
 HFT pipeline. `tokio::task_local!` via `with_signer(signer, f)` scopes the
 keypair slot to the **Tokio task**, giving each in-flight trade its own
 isolated signing context with zero locking overhead.
