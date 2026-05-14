@@ -104,3 +104,19 @@ isolated signing context with zero locking overhead.
 - [Rig Framework](https://rig.rs) · [0xPlaygrounds](https://github.com/0xPlaygrounds/rig)
 - [Jupiter](https://jup.ag/) · [Solana Program Library](https://spl.solana.com/)
 - [polar-bear-rig-hft](https://github.com/murtazaai/polar-bear-rig-hft)
+
+---
+
+## 📝 License
+
+PBS License: [PBS License](./LICENSE-PBS)
+
+---
+
+## 👤 Author
+
+**Murtaza Ali Imtiaz**
+
+- LinkedIn: [LinkedIn](https://linkedin.com/in/murtazai)
+- GitHub: [@murtazaai](https://github.com/murtazaai)
+- Portfolio: [murtazai.com](https://murtazai.com)
