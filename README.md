@@ -107,13 +107,13 @@ isolated signing context with zero locking overhead.
 
 ---
 
-## 📝 License
+## License
 
 PBS License: [PBS License](./LICENSE-PBS)
 
 ---
 
-## 👤 Author
+## Author
 
 **Murtaza Ali Imtiaz**
 
