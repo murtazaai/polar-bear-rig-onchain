@@ -2,7 +2,7 @@
 
 **rig-onchain-kit Agent: Solana Balance → Jupiter Swap (dry-run) → SignerContext Isolation**
 
-> Technology Lead: Murtaza Ali Imtiaz · Polar Bear Systems · July 2019–Present
+> Built by **[Murtaza Ali Imtiaz](https://github.com/murtazaai)** · Technology Lead · Polar Bear Systems · July 2019–Present
 
 A production-grade Rust implementation of the `rig-onchain-kit` on-chain agent
 pattern, powered by [Rig (ARC)](https://rig.rs). Demonstrates Solana devnet
