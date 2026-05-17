@@ -2,6 +2,12 @@
 
 **rig-onchain-kit Agent: Solana Balance → Jupiter Swap (dry-run) → SignerContext Isolation**
 
+[![Rust](https://img.shields.io/badge/rust-1.93.1+-orange)](https://www.rust-lang.org/)
+[![Edition](https://img.shields.io/badge/Edition-2024-blue)](https://doc.rust-lang.org/edition-guide/)
+[![rig-core](https://img.shields.io/badge/rig--core-0.37-purple)](https://rig.rs)
+[![Solana](https://img.shields.io/badge/Solana-Devnet%2FMainnet-9945FF)](https://solana.com)
+[![License: PBS](https://img.shields.io/badge/license-PBS-blue)](LICENSE-PBS)
+
 > Built by **[Murtaza Ali Imtiaz](https://github.com/murtazaai)** · Technology Lead · Polar Bear Systems · July 2019–Present
 
 A production-grade Rust implementation of the `rig-onchain-kit` on-chain agent
