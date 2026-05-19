@@ -115,7 +115,8 @@ isolated signing context with zero locking overhead.
 
 ## License
 
-PBS License: [PBS License](./LICENSE-PBS)
+Proprietary - © 2026 Murtaza Ali Imtiaz / Polar Bear Systems  
+See [LICENSE-PBS](LICENSE-PBS) for permitted use.
 
 ---
 
