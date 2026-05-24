@@ -1,4 +1,4 @@
-//! SignerContext - task-local keypair isolation for secure on-chain operations.
+//! `SignerContext` - task-local keypair isolation for secure on-chain operations.
 //!
 //! Implements the security boundary described in the `rig-onchain-kit`
 //! documentation: every async on-chain call must be wrapped in
@@ -235,7 +235,7 @@ pub fn snapshot_active() -> Option<SignerSnapshot> {
 ///
 /// # Errors
 ///
-/// Returns `Err` if no [`SignerContext`] is installed for this task.
+/// Returns `Err` if no `SignerContext` is installed for this task.
 pub fn active_pubkey() -> Result<String> {
     CURRENT_SIGNER
         .try_with(|ctx| ctx.pubkey.clone())

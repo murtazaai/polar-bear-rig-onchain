@@ -85,6 +85,13 @@ impl JupiterClient {
     ///   (lamports for SOL).
     /// * `slippage_bps` - Allowed slippage in basis points (100 bps = 1 %).
     ///
+    /// # Panics
+    ///
+    /// Panics if `self.dry_run` is `false`. This is a compile-time-enforced
+    /// safety abort: [`JupiterClient::dry_run`] is the only public constructor
+    /// and always sets `dry_run = true`, so this condition can only be reached
+    /// by constructing the client through unsafe means.
+    ///
     /// # Errors
     ///
     /// Returns `Err` on network failure, a non-2xx HTTP response, or a
@@ -208,7 +215,7 @@ pub struct JupiterQuote {
     pub in_amount: u64,
     /// Output amount in smallest unit of output mint (USDC micro-units).
     pub out_amount: u64,
-    /// Human-readable USDC output (out_amount ÷ 1 000 000).
+    /// Human-readable USDC output (`out_amount` ÷ 1 000 000).
     pub out_amount_ui: f64,
     /// Price impact as a percentage string from the Jupiter API.
     pub price_impact_pct: String,
@@ -242,6 +249,7 @@ pub struct SwapRoute {
 impl JupiterQuote {
     fn from_raw(raw: JupiterQuoteRaw) -> Self {
         let out_amount: u64 = raw.out_amount.parse().unwrap_or(0);
+        #[allow(clippy::cast_precision_loss)]
         let out_amount_ui = out_amount as f64 / 1_000_000.0; // USDC has 6 decimals
 
         let routes = raw

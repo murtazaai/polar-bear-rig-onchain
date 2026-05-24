@@ -3,7 +3,7 @@
 //! **Polar Bear Systems** | Technology Lead: Murtaza Ali Imtiaz
 //!
 //! Platform: Rig (Rust Inference Gateway / ARC) · rig-onchain-kit ·
-//! SignerContext (task-local) · Jupiter V6 (dry-run) · Solana devnet
+//! `SignerContext` (task-local) · Jupiter V6 (dry-run) · Solana devnet
 //!
 //! ## Usage
 //!
@@ -34,13 +34,13 @@ use polar_bear_rig_onchain::{agent, config::Config, onchain};
 /// CLI operating mode - selects which subsystem to exercise.
 #[derive(Debug, Clone, ValueEnum)]
 enum Mode {
-    /// Run the full pipeline: SignerContext → balance → Jupiter quote → isolation log.
+    /// Run the full pipeline: `SignerContext` → balance → Jupiter quote → isolation log.
     Full,
     /// Run only the Solana devnet balance query.
     Balance,
     /// Run only the Jupiter V6 dry-run swap quote.
     Quote,
-    /// Run the SignerContext task-local isolation demo (3 concurrent tasks).
+    /// Run the `SignerContext` task-local isolation demo (3 concurrent tasks).
     Signer,
 }
 
@@ -55,7 +55,7 @@ struct Args {
     #[arg(short, long, default_value = "full")]
     mode: Mode,
 
-    /// Solana devnet wallet address to query (overrides WALLET_ADDRESS env var).
+    /// Solana devnet wallet address to query (overrides `WALLET_ADDRESS` env var).
     #[arg(short, long)]
     wallet: Option<String>,
 
@@ -107,7 +107,7 @@ async fn main() -> Result<()> {
 
 // ── Mode implementations ──────────────────────────────────────────────────────
 
-/// Full pipeline: SignerContext → rig-core agent → balance → quote → isolation log.
+/// Full pipeline: `SignerContext` → rig-core agent → balance → quote → isolation log.
 async fn run_full(cfg: &Config, amount: f64) -> Result<()> {
     let solana = Arc::new(onchain::balance::SolanaClient::devnet());
     let jupiter = Arc::new(onchain::jupiter::JupiterClient::dry_run());
@@ -142,6 +142,7 @@ async fn run_full(cfg: &Config, amount: f64) -> Result<()> {
 }
 
 /// Balance-only mode: query and print Solana devnet balance.
+#[allow(clippy::unused_async)]
 async fn run_balance(cfg: &Config) -> Result<()> {
     let client = onchain::balance::SolanaClient::devnet();
     let result = client.query_balance(&cfg.wallet_address)?;

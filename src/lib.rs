@@ -21,9 +21,9 @@
 //!
 //! ## Full pipeline
 //!
-//! 1. **SignerContext** ([`onchain::signer`]) - a random ephemeral keypair is
+//! 1. **`SignerContext`** ([`onchain::signer`]) - a random ephemeral keypair is
 //!    bound to the current Tokio task via `tokio::task_local!`. The
-//!    [`onchain::signer::SignerGuard`] RAII wrapper guarantees the context is
+//!    `onchain::signer::SignerGuard` RAII wrapper guarantees the context is
 //!    evicted even if the task panics.
 //! 2. **Balance query** ([`onchain::balance`]) - Solana devnet RPC
 //!    `get_balance` call; returns lamports and SOL denomination.

@@ -6,7 +6,7 @@
 //! |---|---|---|
 //! | [`SolanaBalanceTool`] | `solana_balance` | Devnet SOL balance query |
 //! | [`JupiterQuoteTool`] | `jupiter_quote` | Dry-run SOL → USDC quote |
-//! | [`SignerIsolationTool`] | `signer_isolation_log` | Snapshot active SignerContext |
+//! | [`SignerIsolationTool`] | `signer_isolation_log` | Snapshot active `SignerContext` |
 //!
 //! ## Rig client trait requirements (rig-core ≥ 0.36)
 //!

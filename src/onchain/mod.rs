@@ -1,6 +1,6 @@
 //! On-chain execution layer.
 //!
-//! Exposes two public entry points consumed by [`crate::main`]:
+//! Exposes two public entry points consumed by `crate::main`:
 //!
 //! * [`execute_pipeline`] - wraps a Solana balance query and a Jupiter quote
 //!   inside an isolated [`signer::LocalSolanaSigner`] context and returns an

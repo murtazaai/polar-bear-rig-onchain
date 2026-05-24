@@ -22,6 +22,7 @@ use std::sync::Arc;
 
 use anyhow::Result;
 use rig::{client::CompletionClient, completion::Prompt, providers::anthropic};
+// use rig::client::ProviderClient;
 
 use crate::config::Config;
 use crate::onchain::{balance::SolanaClient, jupiter::JupiterClient};

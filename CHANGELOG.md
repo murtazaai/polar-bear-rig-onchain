@@ -6,6 +6,27 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ---
 
+## [0.2.0] - 2026-05-25
+
+### Removed
+
+- `src/signer_context.rs` — orphan file from the pre-module-refactor era. Used
+  `thread_local!` (the security bug documented in Fix 1) with `uuid` and
+  `chrono` dependencies absent from `Cargo.toml`. The correct implementation
+  lives in `src/onchain/signer.rs` via `tokio::task_local!`.
+- `src/solana_ops.rs` — orphan duplicate of `src/onchain/balance.rs`. Neither
+  file was referenced from `lib.rs`; removing them eliminates dead code and
+  resolves the `missing_docs` lint warnings they triggered.
+
+### Fixed
+
+- **Fix 6 (complete)** — `rig::client::ProviderClient` added alongside
+  `CompletionClient` in `src/agent/mod.rs`. Both traits must be in scope for
+  `.agent()` to resolve on `anthropic::Client` in rig-core ≥ 0.36; only
+  `CompletionClient` was present in the previous commit.
+- **README badges** — corrected `rust-1.93.1+` → `rust-1.85.0+` and
+  `rig-core-0.37` → `rig-core-0.36+` to match `Cargo.toml` values.
+
 ## [Unreleased]
 
 ### Added

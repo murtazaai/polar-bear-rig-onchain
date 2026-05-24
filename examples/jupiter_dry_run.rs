@@ -14,7 +14,8 @@
 use anyhow::Result;
 use polar_bear_rig_onchain::onchain::{
     jupiter::{DEFAULT_SLIPPAGE_BPS, JupiterClient, SOL_MINT, USDC_MINT},
-    signer::{IsolationReport, LocalSolanaSigner, snapshot_active, with_signer},
+    signer::{IsolationReport, LocalSolanaSigner, with_signer},
+    // signer::snapshot_active,
     types::Lamports,
 };
 use tracing::info;

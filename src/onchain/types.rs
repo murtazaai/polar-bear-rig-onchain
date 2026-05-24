@@ -3,7 +3,7 @@
 //! | Type | Description |
 //! |---|---|
 //! | [`Lamports`] | Type-safe wrapper around the native SOL denomination |
-//! | [`QuoteAmountSol`] | A validated SOL amount used in Jupiter quote requests |
+//! | `QuoteAmountSol` | A validated SOL amount used in Jupiter quote requests |
 
 /// Type-safe wrapper around lamports (the smallest SOL denomination).
 ///
@@ -17,13 +17,17 @@ impl Lamports {
 
     /// Convert to human-readable SOL with 9-decimal precision.
     #[must_use]
+    #[allow(clippy::cast_precision_loss)]
     pub fn to_sol(self) -> f64 {
         self.0 as f64 / Self::PER_SOL as f64
     }
 
     /// Construct from a floating-point SOL amount (truncating sub-lamport amounts).
     #[must_use]
+    #[allow(clippy::cast_precision_loss)]
     pub fn from_sol(sol: f64) -> Self {
+        #[allow(clippy::cast_possible_truncation)]
+        #[allow(clippy::cast_sign_loss)]
         Self((sol * Self::PER_SOL as f64) as u64)
     }
 }

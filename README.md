@@ -2,9 +2,9 @@
 
 **rig-onchain-kit Agent: Solana Balance → Jupiter Swap (dry-run) → SignerContext Isolation**
 
-[![Rust](https://img.shields.io/badge/rust-1.93.1+-orange)](https://www.rust-lang.org/)
+[![Rust](https://img.shields.io/badge/rust-1.85.0+-orange)](https://www.rust-lang.org/)
 [![Edition](https://img.shields.io/badge/Edition-2024-blue)](https://doc.rust-lang.org/edition-guide/)
-[![rig-core](https://img.shields.io/badge/rig--core-0.37-purple)](https://rig.rs)
+[![rig-core](https://img.shields.io/badge/rig--core-0.36+-purple)](https://rig.rs)
 [![Solana](https://img.shields.io/badge/Solana-Devnet%2FMainnet-9945FF)](https://solana.com)
 [![License: PBS](https://img.shields.io/badge/license-PBS-blue)](LICENSE-PBS)
 

@@ -4,6 +4,67 @@
 // see: https://zed.dev/docs/debugger
 [
   {
+    "label": "Clean polar-bear-rig-onchain",
+    "build": {
+      "command": "cargo",
+      "args": ["clean"],
+    },
+    "program": "$ZED_WORKTREE_ROOT/target/debug/polar-bear-rig-onchain",
+    // sourceLanguages is required for CodeLLDB (not GDB) when using Rust
+    "sourceLanguages": ["rust"],
+    "request": "launch",
+    "adapter": "CodeLLDB",
+  },
+  {
+    "label": "Lint (clippy) - polar-bear-rig-onchain",
+    "build": {
+      "command": "cargo",
+      "args": ["clippy", "--all-targets", "--", "-D", "warnings"],
+    },
+    "program": "$ZED_WORKTREE_ROOT/target/debug/polar-bear-rig-onchain",
+    // sourceLanguages is required for CodeLLDB (not GDB) when using Rust
+    "sourceLanguages": ["rust"],
+    "request": "launch",
+    "adapter": "CodeLLDB",
+  },
+  {
+    "label": "Type-check only; no linking polar-bear-rig-onchain",
+    "build": {
+      "command": "cargo",
+      "args": ["check"],
+    },
+    "program": "$ZED_WORKTREE_ROOT/target/debug/polar-bear-rig-onchain",
+    // sourceLanguages is required for CodeLLDB (not GDB) when using Rust
+    "sourceLanguages": ["rust"],
+    "request": "launch",
+    "adapter": "CodeLLDB",
+  },
+  {
+    "label": "Browse rustdoc locally polar-bear-rig-onchain",
+    "build": {
+      "command": "cargo",
+      "args": ["doc", "--open", "--document-private-items"],
+    },
+    "program": "$ZED_WORKTREE_ROOT/target/debug/polar-bear-rig-onchain",
+    // sourceLanguages is required for CodeLLDB (not GDB) when using Rust
+    "sourceLanguages": ["rust"],
+    "request": "launch",
+    "adapter": "CodeLLDB",
+  },
+  {
+    "label": "CI docs check",
+    "build": {
+      "command": "cargo",
+      "args": ["doc", "--open"],
+      "RUSTDOCFLAGS": ["--cfg", "docsrs", "-D", "warnings", "cargo", "doc"],
+    },
+    "program": "$ZED_WORKTREE_ROOT/target/debug/polar-bear-rig-hft",
+    // sourceLanguages is required for CodeLLDB (not GDB) when using Rust
+    "sourceLanguages": ["rust"],
+    "request": "launch",
+    "adapter": "CodeLLDB",
+  },
+  {
     "label": "Build & Debug native binary",
     "build": {
       "command": "cargo",
