@@ -9,10 +9,12 @@
     "sourceLanguages": ["rust"],
     "configurations": [
       {
-        "name": "Clean",
         "build": {
           "command": "cargo",
           "args": ["clean"],
+          "env": {
+            "RUST_BACKTRACE": "full",
+          },
         },
       },
     ],
@@ -27,7 +29,6 @@
     "sourceLanguages": ["rust"],
     "configurations": [
       {
-        "name": "Lint (clippy)",
         "build": {
           "command": "cargo",
           "args": ["clippy", "--all-targets", "--", "-D", "warnings"],
@@ -45,7 +46,6 @@
     "sourceLanguages": ["rust"],
     "configurations": [
       {
-        "name": "Type-check only; no linking",
         "build": {
           "command": "cargo",
           "args": ["check"],
@@ -63,7 +63,6 @@
     "sourceLanguages": ["rust"],
     "configurations": [
       {
-        "name": "Browse Rust Docs locally",
         "build": {
           "command": "cargo",
           "args": ["doc", "--open", "--document-private-items"],
@@ -81,7 +80,6 @@
     "sourceLanguages": ["rust"],
     "configurations": [
       {
-        "name": "CI Docs check",
         "build": {
           "command": "cargo",
           "args": ["doc", "--open"],
@@ -100,25 +98,6 @@
     "sourceLanguages": ["rust"],
     "configurations": [
       {
-        "name": "Run all deterministic tests",
-        "build": {
-          "command": "cargo",
-          "args": ["test"],
-        },
-      },
-    ],
-  },
-  {
-    "label": "Build & Debug native binary",
-    "adapter": "CodeLLDB",
-    "type": "lldb",
-    "request": "launch",
-    "program": "$ZED_WORKTREE_ROOT/target/debug/binary",
-    // sourceLanguages is required for CodeLLDB (not GDB) when using Rust
-    "sourceLanguages": ["rust"],
-    "configurations": [
-      {
-        "name": "Build & Debug native binary",
         "build": {
           "command": "cargo",
           "args": ["test"],
