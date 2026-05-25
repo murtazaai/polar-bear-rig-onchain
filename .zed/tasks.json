@@ -3,60 +3,60 @@
     "label": "build (release)",
     "command": "cargo",
     "args": ["build", "--release"],
-    "env": {}
+    "env": {},
   },
   {
     "label": "run full pipeline",
     "command": "cargo",
     "args": ["run", "--release", "--", "--mode", "full"],
-    "env": {}
+    "env": {},
   },
   {
     "label": "run balance",
     "command": "cargo",
     "args": ["run", "--release", "--", "--mode", "balance"],
-    "env": {}
+    "env": {},
   },
   {
     "label": "run quote",
     "command": "cargo",
     "args": ["run", "--release", "--", "--mode", "quote"],
-    "env": {}
+    "env": {},
   },
   {
     "label": "run signer demo",
     "command": "cargo",
     "args": ["run", "--release", "--", "--mode", "signer"],
-    "env": {}
+    "env": {},
   },
   {
     "label": "test (all)",
     "command": "cargo",
     "args": ["test"],
-    "env": {}
+    "env": {},
   },
   {
     "label": "clippy",
     "command": "cargo",
     "args": ["clippy", "--all-targets", "--", "-D", "warnings"],
-    "env": {}
+    "env": {},
   },
   {
     "label": "fmt",
     "command": "cargo",
     "args": ["fmt", "--all"],
-    "env": {}
+    "env": {},
   },
   {
     "label": "example: signer_demo",
     "command": "cargo",
     "args": ["run", "--example", "signer_demo"],
-    "env": {}
+    "env": {},
   },
   {
     "label": "example: jupiter_dry_run",
     "command": "cargo",
     "args": ["run", "--example", "jupiter_dry_run"],
-    "env": {}
-  }
+    "env": {},
+  },
 ]

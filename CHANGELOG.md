@@ -6,6 +6,26 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ---
 
+## [0.5.0] - 2026-05-25
+
+### Fixed
+
+- **`src/agent/mod.rs`** — `ProviderClient` uncommented for the third time.
+  The import keeps regressing to a comment between uploads. Added a note in the
+  module doc to make the requirement explicit: both `CompletionClient` **and**
+  `ProviderClient` must be in scope for `.agent()` to resolve on
+  `anthropic::Client` with rig-core ≥ 0.36.
+
+- **`tests/providers/anthropic.rs`** — Fixed type error `&Option<String>`
+  passed where `&str` is required. `cfg.anthropic_api_key` is `Option<String>`
+  since v0.3.0; both `#[ignore]`-gated tests now call
+  `.as_deref().expect("ANTHROPIC_API_KEY must be set for this test")` to
+  extract the `&str` slice. The previous code compiled against the old
+  `String` type and was never updated when the field type changed. Although the
+  tests are skipped at runtime without a key, they still must compile — the
+  type error blocked `cargo test` (and `cargo build --tests`) even with no key
+  present.
+
 ## [0.4.0] - 2026-05-25
 
 ### Added

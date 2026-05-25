@@ -1,112 +1,151 @@
-// Project-local debug tasks
-//
-// For more documentation on how to configure debug tasks,
-// see: https://zed.dev/docs/debugger
 [
   {
-    "label": "Clean polar-bear-rig-onchain",
-    "build": {
-      "command": "cargo",
-      "args": ["clean"],
-    },
+    "label": "Clean",
+    "adapter": "CodeLLDB",
+    "type": "lldb",
+    "request": "launch",
     "program": "$ZED_WORKTREE_ROOT/target/debug/polar-bear-rig-onchain",
     // sourceLanguages is required for CodeLLDB (not GDB) when using Rust
     "sourceLanguages": ["rust"],
-    "request": "launch",
-    "adapter": "CodeLLDB",
+    "configurations": [
+      {
+        "name": "Clean",
+        "build": {
+          "command": "cargo",
+          "args": ["clean"],
+        },
+      },
+    ],
   },
   {
-    "label": "Lint (clippy) - polar-bear-rig-onchain",
-    "build": {
-      "command": "cargo",
-      "args": ["clippy", "--all-targets", "--", "-D", "warnings"],
-    },
+    "label": "Lint (clippy)",
+    "adapter": "CodeLLDB",
+    "type": "lldb",
+    "request": "launch",
     "program": "$ZED_WORKTREE_ROOT/target/debug/polar-bear-rig-onchain",
     // sourceLanguages is required for CodeLLDB (not GDB) when using Rust
     "sourceLanguages": ["rust"],
-    "request": "launch",
-    "adapter": "CodeLLDB",
+    "configurations": [
+      {
+        "name": "Lint (clippy)",
+        "build": {
+          "command": "cargo",
+          "args": ["clippy", "--all-targets", "--", "-D", "warnings"],
+        },
+      },
+    ],
   },
   {
-    "label": "Type-check only; no linking polar-bear-rig-onchain",
-    "build": {
-      "command": "cargo",
-      "args": ["check"],
-    },
+    "label": "Type-check only; no linking",
+    "adapter": "CodeLLDB",
+    "type": "lldb",
+    "request": "launch",
     "program": "$ZED_WORKTREE_ROOT/target/debug/polar-bear-rig-onchain",
     // sourceLanguages is required for CodeLLDB (not GDB) when using Rust
     "sourceLanguages": ["rust"],
-    "request": "launch",
-    "adapter": "CodeLLDB",
+    "configurations": [
+      {
+        "name": "Type-check only; no linking",
+        "build": {
+          "command": "cargo",
+          "args": ["check"],
+        },
+      },
+    ],
   },
   {
-    "label": "Browse rustdoc locally polar-bear-rig-onchain",
-    "build": {
-      "command": "cargo",
-      "args": ["doc", "--open", "--document-private-items"],
-    },
+    "label": "Browse Rust Docs locally",
+    "adapter": "CodeLLDB",
+    "type": "lldb",
+    "request": "launch",
     "program": "$ZED_WORKTREE_ROOT/target/debug/polar-bear-rig-onchain",
     // sourceLanguages is required for CodeLLDB (not GDB) when using Rust
     "sourceLanguages": ["rust"],
-    "request": "launch",
-    "adapter": "CodeLLDB",
+    "configurations": [
+      {
+        "name": "Browse Rust Docs locally",
+        "build": {
+          "command": "cargo",
+          "args": ["doc", "--open", "--document-private-items"],
+        },
+      },
+    ],
   },
   {
-    "label": "CI docs check",
-    "build": {
-      "command": "cargo",
-      "args": ["doc", "--open"],
-      "RUSTDOCFLAGS": ["--cfg", "docsrs", "-D", "warnings", "cargo", "doc"],
-    },
+    "label": "CI Docs check",
+    "adapter": "CodeLLDB",
+    "type": "lldb",
+    "request": "launch",
     "program": "$ZED_WORKTREE_ROOT/target/debug/polar-bear-rig-onchain",
     // sourceLanguages is required for CodeLLDB (not GDB) when using Rust
     "sourceLanguages": ["rust"],
-    "request": "launch",
-    "adapter": "CodeLLDB",
+    "configurations": [
+      {
+        "name": "CI Docs check",
+        "build": {
+          "command": "cargo",
+          "args": ["doc", "--open"],
+          "RUSTDOCFLAGS": ["--cfg", "docsrs", "-D", "warnings", "cargo", "doc"],
+        },
+      },
+    ],
   },
   {
-    "label": "Test all deterministic tests - polar-bear-rig-onchain",
-    "build": {
-      "command": "cargo",
-      "args": ["test"],
-    },
+    "label": "Run all deterministic tests",
+    "adapter": "CodeLLDB",
+    "type": "lldb",
+    "request": "launch",
     "program": "$ZED_WORKTREE_ROOT/target/debug/polar-bear-rig-onchain",
     // sourceLanguages is required for CodeLLDB (not GDB) when using Rust
     "sourceLanguages": ["rust"],
-    "request": "launch",
-    "adapter": "CodeLLDB",
+    "configurations": [
+      {
+        "name": "Run all deterministic tests",
+        "build": {
+          "command": "cargo",
+          "args": ["test"],
+        },
+      },
+    ],
   },
   {
     "label": "Build & Debug native binary",
-    "build": {
-      "command": "cargo",
-      "args": ["build"],
-      "params": ["--mode", "full"],
-    },
+    "adapter": "CodeLLDB",
     "type": "lldb",
-    "name": "Debug polar-bear-rig-onchain (full)",
+    "request": "launch",
     "program": "$ZED_WORKTREE_ROOT/target/debug/binary",
     // sourceLanguages is required for CodeLLDB (not GDB) when using Rust
     "sourceLanguages": ["rust"],
-    "request": "launch",
-    "adapter": "CodeLLDB",
+    "configurations": [
+      {
+        "name": "Build & Debug native binary",
+        "build": {
+          "command": "cargo",
+          "args": ["test"],
+        },
+      },
+    ],
   },
   {
-    "label": "Debug polar-bear-rig-onchain (signer demo)",
-    "run": {
-      "command": "cargo",
-      "args": ["run"],
-      "params": ["--mode", "full"],
-    },
+    "label": "Run Signer Demo",
+    "adapter": "CodeLLDB",
     "type": "lldb",
-    "name": "Debug polar-bear-rig-onchain (signer demo)",
+    "request": "launch",
     "program": "$ZED_WORKTREE_ROOT/target/debug/binary",
     // sourceLanguages is required for CodeLLDB (not GDB) when using Rust
     "sourceLanguages": ["rust"],
-    "request": "launch",
-    "adapter": "CodeLLDB",
     "env": {
       "RUST_LOG": "polar_bear_rig_onchain=debug",
     },
+    "configurations": [
+      {
+        "name": "Run Signer Demo",
+        "run": {
+          "command": "cargo",
+          "args": ["run"],
+          "params": ["--mode", "full"],
+        },
+      },
+    ],
   },
 ]
