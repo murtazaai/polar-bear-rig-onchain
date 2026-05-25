@@ -1,130 +1,170 @@
+// polar-bear-rig-onchain — Zed debug launch configurations
+//
+// Adapter: CodeLLDB (install via Zed extensions if not present).
+// Every config uses "build_task" to compile a fresh debug binary before
+// attaching the debugger — this references the "build: debug" task in
+// tasks.json. Set breakpoints in the gutter before launching.
+//
+// ⚠  --mode full requires ANTHROPIC_API_KEY in .env or the shell environment.
+//    All other configs are fully keyless.
 [
+  // ══ MAIN BINARY — keyless modes ══════════════════════════════════════════
+
   {
-    "label": "Clean",
+    // Best starting point: runs the complete pipeline without the LLM.
+    // Steps through balance → quote → signer code paths. No API key needed.
+    "label": "Debug: --mode full --no-agent",
     "adapter": "CodeLLDB",
     "type": "lldb",
     "request": "launch",
     "program": "$ZED_WORKTREE_ROOT/target/debug/polar-bear-rig-onchain",
-    // sourceLanguages is required for CodeLLDB (not GDB) when using Rust
-    "sourceLanguages": ["rust"],
-    "configurations": [
-      {
-        "build": {
-          "command": "cargo",
-          "args": ["clean"],
-          "env": {
-            "RUST_BACKTRACE": "full",
-          },
-        },
-      },
-    ],
-  },
-  {
-    "label": "Lint (clippy)",
-    "adapter": "CodeLLDB",
-    "type": "lldb",
-    "request": "launch",
-    "program": "$ZED_WORKTREE_ROOT/target/debug/polar-bear-rig-onchain",
-    // sourceLanguages is required for CodeLLDB (not GDB) when using Rust
-    "sourceLanguages": ["rust"],
-    "configurations": [
-      {
-        "build": {
-          "command": "cargo",
-          "args": ["clippy", "--all-targets", "--", "-D", "warnings"],
-        },
-      },
-    ],
-  },
-  {
-    "label": "Type-check only; no linking",
-    "adapter": "CodeLLDB",
-    "type": "lldb",
-    "request": "launch",
-    "program": "$ZED_WORKTREE_ROOT/target/debug/polar-bear-rig-onchain",
-    // sourceLanguages is required for CodeLLDB (not GDB) when using Rust
-    "sourceLanguages": ["rust"],
-    "configurations": [
-      {
-        "build": {
-          "command": "cargo",
-          "args": ["check"],
-        },
-      },
-    ],
-  },
-  {
-    "label": "Browse Rust Docs locally",
-    "adapter": "CodeLLDB",
-    "type": "lldb",
-    "request": "launch",
-    "program": "$ZED_WORKTREE_ROOT/target/debug/polar-bear-rig-onchain",
-    // sourceLanguages is required for CodeLLDB (not GDB) when using Rust
-    "sourceLanguages": ["rust"],
-    "configurations": [
-      {
-        "build": {
-          "command": "cargo",
-          "args": ["doc", "--open", "--document-private-items"],
-        },
-      },
-    ],
-  },
-  {
-    "label": "CI Docs check",
-    "adapter": "CodeLLDB",
-    "type": "lldb",
-    "request": "launch",
-    "program": "$ZED_WORKTREE_ROOT/target/debug/polar-bear-rig-onchain",
-    // sourceLanguages is required for CodeLLDB (not GDB) when using Rust
-    "sourceLanguages": ["rust"],
-    "configurations": [
-      {
-        "build": {
-          "command": "cargo",
-          "args": ["doc", "--open"],
-          "RUSTDOCFLAGS": ["--cfg", "docsrs", "-D", "warnings", "cargo", "doc"],
-        },
-      },
-    ],
-  },
-  {
-    "label": "Run all deterministic tests",
-    "adapter": "CodeLLDB",
-    "type": "lldb",
-    "request": "launch",
-    "program": "$ZED_WORKTREE_ROOT/target/debug/polar-bear-rig-onchain",
-    // sourceLanguages is required for CodeLLDB (not GDB) when using Rust
-    "sourceLanguages": ["rust"],
-    "configurations": [
-      {
-        "build": {
-          "command": "cargo",
-          "args": ["test"],
-        },
-      },
-    ],
-  },
-  {
-    "label": "Run Signer Demo",
-    "adapter": "CodeLLDB",
-    "type": "lldb",
-    "request": "launch",
-    "program": "$ZED_WORKTREE_ROOT/target/debug/binary",
-    // sourceLanguages is required for CodeLLDB (not GDB) when using Rust
+    "args": ["--mode", "full", "--no-agent"],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    // sourceLanguages enables Rust pretty-printers in CodeLLDB (e.g. Vec, HashMap display).
     "sourceLanguages": ["rust"],
     "env": {
       "RUST_LOG": "polar_bear_rig_onchain=debug",
+      "RUST_BACKTRACE": "full"
     },
-    "configurations": [
-      {
-        "name": "Run Signer Demo",
-        "run": {
-          "command": "cargo",
-          "args": ["run"],
-          "params": ["--mode", "full"],
-        },
-      },
-    ],
+    "build_task": "build: debug"
   },
+  {
+    // Debug the Solana devnet RPC call in isolation.
+    "label": "Debug: --mode balance",
+    "adapter": "CodeLLDB",
+    "type": "lldb",
+    "request": "launch",
+    "program": "$ZED_WORKTREE_ROOT/target/debug/polar-bear-rig-onchain",
+    "args": ["--mode", "balance"],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "sourceLanguages": ["rust"],
+    "env": {
+      "RUST_LOG": "polar_bear_rig_onchain=debug",
+      "RUST_BACKTRACE": "full"
+    },
+    "build_task": "build: debug"
+  },
+  {
+    // Debug the Jupiter V6 HTTP quote call and JSON deserialisation.
+    "label": "Debug: --mode quote",
+    "adapter": "CodeLLDB",
+    "type": "lldb",
+    "request": "launch",
+    "program": "$ZED_WORKTREE_ROOT/target/debug/polar-bear-rig-onchain",
+    "args": ["--mode", "quote"],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "sourceLanguages": ["rust"],
+    "env": {
+      "RUST_LOG": "polar_bear_rig_onchain=debug",
+      "RUST_BACKTRACE": "full"
+    },
+    "build_task": "build: debug"
+  },
+  {
+    // Debug tokio::task_local! isolation across the 3 concurrent signer tasks.
+    // Useful for verifying SignerContext does not cross task boundaries.
+    "label": "Debug: --mode signer",
+    "adapter": "CodeLLDB",
+    "type": "lldb",
+    "request": "launch",
+    "program": "$ZED_WORKTREE_ROOT/target/debug/polar-bear-rig-onchain",
+    "args": ["--mode", "signer"],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "sourceLanguages": ["rust"],
+    "env": {
+      "RUST_LOG": "polar_bear_rig_onchain=debug",
+      "RUST_BACKTRACE": "full"
+    },
+    "build_task": "build: debug"
+  },
+
+  // ══ MAIN BINARY — requires ANTHROPIC_API_KEY ════════════════════════════
+
+  {
+    // Full PEV loop with the rig-core agent. Requires ANTHROPIC_API_KEY.
+    // Place breakpoints in src/agent/mod.rs, src/agent/tools.rs, or
+    // run_full() in src/main.rs before launching.
+    "label": "Debug: --mode full  ⚠ needs ANTHROPIC_API_KEY",
+    "adapter": "CodeLLDB",
+    "type": "lldb",
+    "request": "launch",
+    "program": "$ZED_WORKTREE_ROOT/target/debug/polar-bear-rig-onchain",
+    "args": ["--mode", "full"],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "sourceLanguages": ["rust"],
+    "env": {
+      "RUST_LOG": "polar_bear_rig_onchain=debug",
+      "RUST_BACKTRACE": "full"
+    },
+    "build_task": "build: debug"
+  },
+  {
+    // Full pipeline with a custom wallet address and 0.5 SOL quote amount.
+    // Edit --wallet and --amount here to target a different devnet address.
+    "label": "Debug: --mode full --wallet <addr> --amount 0.5  ⚠ needs ANTHROPIC_API_KEY",
+    "adapter": "CodeLLDB",
+    "type": "lldb",
+    "request": "launch",
+    "program": "$ZED_WORKTREE_ROOT/target/debug/polar-bear-rig-onchain",
+    "args": [
+      "--mode",   "full",
+      "--wallet", "4Nd1mBQtrMJVYVfKf2PX99kkXz36o2gWHa9zSX6TQKL",
+      "--amount", "0.5"
+    ],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "sourceLanguages": ["rust"],
+    "env": {
+      "RUST_LOG": "polar_bear_rig_onchain=debug",
+      "RUST_BACKTRACE": "full"
+    },
+    "build_task": "build: debug"
+  },
+
+  // ══ EXAMPLES ═════════════════════════════════════════════════════════════
+
+  {
+    "label": "Debug: example — balance_demo",
+    "adapter": "CodeLLDB",
+    "type": "lldb",
+    "request": "launch",
+    "program": "$ZED_WORKTREE_ROOT/target/debug/examples/balance_demo",
+    "args": [],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "sourceLanguages": ["rust"],
+    "env": {
+      "RUST_LOG": "polar_bear_rig_onchain=debug",
+      "RUST_BACKTRACE": "full"
+    },
+    "build_task": "build: debug"
+  },
+  {
+    "label": "Debug: example — signer_demo",
+    "adapter": "CodeLLDB",
+    "type": "lldb",
+    "request": "launch",
+    "program": "$ZED_WORKTREE_ROOT/target/debug/examples/signer_demo",
+    "args": [],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "sourceLanguages": ["rust"],
+    "env": {
+      "RUST_LOG": "polar_bear_rig_onchain=debug",
+      "RUST_BACKTRACE": "full"
+    },
+    "build_task": "build: debug"
+  },
+  {
+    "label": "Debug: example — jupiter_dry_run",
+    "adapter": "CodeLLDB",
+    "type": "lldb",
+    "request": "launch",
+    "program": "$ZED_WORKTREE_ROOT/target/debug/examples/jupiter_dry_run",
+    "args": [],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "sourceLanguages": ["rust"],
+    "env": {
+      "RUST_LOG": "polar_bear_rig_onchain=debug",
+      "RUST_BACKTRACE": "full"
+    },
+    "build_task": "build: debug"
+  }
 ]

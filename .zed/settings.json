@@ -1,0 +1,181 @@
+// polar-bear-rig-onchain — Zed project-level settings
+//
+// These settings apply only to this project and override your global
+// ~/.config/zed/settings.json for files opened in this workspace.
+// Keep in sync with rustfmt.toml, .clippy.toml, and Cargo.toml [lints].
+{
+  // ── Editor ──────────────────────────────────────────────────────────────
+  // Match rustfmt.toml: tab_spaces = 4, hard_tabs = false, max_width = 100.
+  "tab_size": 4,
+  "hard_tabs": false,
+  "preferred_line_length": 100,
+  "soft_wrap": "preferred_line_length",
+
+  // ── Language overrides ───────────────────────────────────────────────────
+  "languages": {
+    "Rust": {
+      "tab_size": 4,
+      "hard_tabs": false,
+      // Delegate formatting to rust-analyzer (which calls rustfmt internally),
+      // so rustfmt.toml settings (edition 2024, max_width 100, etc.) are used.
+      "formatter": "language_server",
+      "format_on_save": "on",
+      // Show types and parameter names inline — especially helpful in
+      // async/await chains and rig-core tool trait implementations.
+      "inlay_hints": {
+        "enabled": true,
+        "show_type_hints": true,
+        "show_parameter_hints": true,
+        "show_other_hints": true,
+        "edit_debounce_ms": 700,
+        "scroll_debounce_ms": 50
+      }
+    },
+    "TOML": {
+      "tab_size": 4,
+      "formatter": "language_server",
+      "format_on_save": "on"
+    },
+    "JSON": {
+      "tab_size": 2,
+      "format_on_save": "on"
+    },
+    "Markdown": {
+      "soft_wrap": "preferred_line_length",
+      "format_on_save": "off"
+    }
+  },
+
+  // ── LSP — rust-analyzer ──────────────────────────────────────────────────
+  "lsp": {
+    "rust-analyzer": {
+      "initialization_options": {
+
+        // ── Check / diagnostics ───────────────────────────────────────────
+        // Run clippy on save instead of cargo check so Zed's Problems panel
+        // mirrors the "clippy" task. Flags match Cargo.toml [lints.clippy]
+        // and the "clippy" task in tasks.json.
+        "check": {
+          "command": "clippy",
+          "extraArgs": ["--all-targets", "--", "-D", "warnings"]
+        },
+
+        // ── Cargo ─────────────────────────────────────────────────────────
+        "cargo": {
+          // Build all targets so tests, examples, and the binary are all
+          // indexed and get completions/go-to-def.
+          "allTargets": true,
+          // Expand proc macros (needed for #[derive(Tool)], clap::Parser, etc.)
+          "buildScripts": { "enable": true }
+        },
+
+        // ── Proc macros ───────────────────────────────────────────────────
+        // Required for clap #[derive(Parser/ValueEnum)], serde #[derive],
+        // rig-core #[derive(Tool)], and tokio::task_local!.
+        "procMacro": {
+          "enable": true,
+          "ignored": {
+            // Suppress false-positive "proc macro not expanded" warnings on
+            // tokio::task_local! which uses a declarative macro, not a proc macro.
+            "tokio": ["task_local"]
+          }
+        },
+
+        // ── Inlay hints ───────────────────────────────────────────────────
+        "inlayHints": {
+          "bindingModeHints":     { "enable": false },
+          "chainingHints":        { "enable": true },
+          "closingBraceHints":    { "enable": true, "minLines": 15 },
+          "closureCaptureHints":  { "enable": true },
+          "closureReturnTypeHints": { "enable": "with_block" },
+          "expressionAdjustmentHints": { "enable": "reborrow" },
+          "lifetimeElisionHints": { "enable": "skip_trivial", "useParameterNames": true },
+          "parameterHints":       { "enable": true },
+          "reborrowHints":        { "enable": "mutable" },
+          "renderColons":         true,
+          "typeHints": {
+            "enable": true,
+            "hideClosureInitialization": false,
+            "hideNamedConstructor": false
+          }
+        },
+
+        // ── Hover ─────────────────────────────────────────────────────────
+        "hover": {
+          "actions": {
+            "enable": true,
+            "references": { "enable": true },
+            "implementations": { "enable": true },
+            "run": { "enable": true },
+            "debug": { "enable": true }
+          },
+          "documentation": {
+            "enable": true,
+            "keywords": { "enable": true }
+          },
+          "links": { "enable": true }
+        },
+
+        // ── Completion ────────────────────────────────────────────────────
+        "completion": {
+          "autoimport": { "enable": true },
+          "autoself": { "enable": true },
+          "callable": { "snippets": "fill_arguments" },
+          "privateEditable": { "enable": true },
+          "postfix": { "enable": true }
+        },
+
+        // ── Imports ───────────────────────────────────────────────────────
+        // Match rustfmt.toml: imports_granularity = "Crate",
+        // group_imports = "StdExternalCrate".
+        "imports": {
+          "granularity": { "enforce": true, "group": "crate" },
+          "group": { "enable": true },
+          "prefer": { "no_std": false }
+        },
+
+        // ── Diagnostics ───────────────────────────────────────────────────
+        "diagnostics": {
+          "enable": true,
+          "experimental": { "enable": true },
+          // Surface Clippy and rustc suggestions as Zed code actions.
+          "styleLints": { "enable": true }
+        },
+
+        // ── Semantic highlighting ─────────────────────────────────────────
+        "semanticHighlighting": {
+          "strings": { "enable": true },
+          "operator": { "enable": true },
+          "punctuation": { "enable": true }
+        },
+
+        // ── Lens (code lens above fns / structs) ──────────────────────────
+        "lens": {
+          "enable": true,
+          "references": {
+            "adt": { "enable": true },
+            "enumVariant": { "enable": true },
+            "method": { "enable": true },
+            "trait": { "enable": true }
+          },
+          "implementations": { "enable": true },
+          "run": { "enable": true },
+          "debug": { "enable": true }
+        },
+
+        // ── Workspace ─────────────────────────────────────────────────────
+        "workspace": {
+          // Reindex when Cargo.lock changes (e.g. after cargo update).
+          "symbol": { "search": { "kind": "all_symbols" } }
+        },
+
+        // ── rustfmt via rust-analyzer ─────────────────────────────────────
+        // rust-analyzer will locate rustfmt.toml automatically; these options
+        // make the edition explicit so it never falls back to an older default.
+        "rustfmt": {
+          "rangeFormatting": { "enable": true }
+        }
+      }
+    }
+  }
+}

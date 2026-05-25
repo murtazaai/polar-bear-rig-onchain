@@ -1,62 +1,287 @@
+// polar-bear-rig-onchain — Zed task definitions
+// Run any task via: Cmd/Ctrl+Shift+P → "task: spawn" (or bind to a key)
+// Tags let you filter in the task picker.
 [
-  {
-    "label": "build (release)",
-    "command": "cargo",
-    "args": ["build", "--release"],
-    "env": {},
-  },
-  {
-    "label": "run full pipeline",
-    "command": "cargo",
-    "args": ["run", "--release", "--", "--mode", "full"],
-    "env": {},
-  },
-  {
-    "label": "run balance",
-    "command": "cargo",
-    "args": ["run", "--release", "--", "--mode", "balance"],
-    "env": {},
-  },
-  {
-    "label": "run quote",
-    "command": "cargo",
-    "args": ["run", "--release", "--", "--mode", "quote"],
-    "env": {},
-  },
-  {
-    "label": "run signer demo",
-    "command": "cargo",
-    "args": ["run", "--release", "--", "--mode", "signer"],
-    "env": {},
-  },
-  {
-    "label": "test (all)",
-    "command": "cargo",
-    "args": ["test"],
-    "env": {},
-  },
-  {
-    "label": "clippy",
-    "command": "cargo",
-    "args": ["clippy", "--all-targets", "--", "-D", "warnings"],
-    "env": {},
-  },
-  {
-    "label": "fmt",
-    "command": "cargo",
-    "args": ["fmt", "--all"],
-    "env": {},
-  },
-  {
-    "label": "example: signer_demo",
-    "command": "cargo",
-    "args": ["run", "--example", "signer_demo"],
-    "env": {},
-  },
-  {
-    "label": "example: jupiter_dry_run",
-    "command": "cargo",
-    "args": ["run", "--example", "jupiter_dry_run"],
-    "env": {},
-  },
+    // ══ BUILD ════════════════════════════════════════════════════════════════
+
+    {
+        // Fast type-check: no codegen, no linking. Use this while editing.
+        "label": "check",
+        "command": "cargo",
+        "args": ["check", "--all-targets"],
+        "cwd": "$ZED_WORKTREE_ROOT",
+        "env": { "RUST_BACKTRACE": "1" },
+        "reveal": "no_focus",
+        "tags": ["build", "lint"],
+    },
+    {
+        // Debug build — used as the pre-launch step by every debug.json entry.
+        "label": "build: debug",
+        "command": "cargo",
+        "args": ["build"],
+        "cwd": "$ZED_WORKTREE_ROOT",
+        "env": { "RUST_BACKTRACE": "1" },
+        "reveal": "no_focus",
+        "tags": ["build"],
+    },
+    {
+        // Optimised binary for benchmarking / real runs.
+        "label": "build: release",
+        "command": "cargo",
+        "args": ["build", "--release"],
+        "cwd": "$ZED_WORKTREE_ROOT",
+        "env": { "RUST_BACKTRACE": "1" },
+        "reveal": "no_focus",
+        "tags": ["build"],
+    },
+    {
+        // Wipe target/ — useful when switching toolchains or clearing stale state.
+        "label": "clean",
+        "command": "cargo",
+        "args": ["clean"],
+        "cwd": "$ZED_WORKTREE_ROOT",
+        "reveal": "no_focus",
+        "tags": ["build", "maintenance"],
+    },
+
+    // ══ LINT / FORMAT ════════════════════════════════════════════════════════
+
+    {
+        // Full Clippy pass — mirrors CI. Respects Cargo.toml [lints.clippy] table
+        // and .clippy.toml thresholds (msrv 1.85.0, cognitive-complexity 30).
+        "label": "clippy",
+        "command": "cargo",
+        "args": ["clippy", "--all-targets", "--", "-D", "warnings"],
+        "cwd": "$ZED_WORKTREE_ROOT",
+        "reveal": "always",
+        "tags": ["lint"],
+    },
+    {
+        // Auto-format in place. rustfmt.toml: edition 2024, max_width 100.
+        "label": "fmt",
+        "command": "cargo",
+        "args": ["fmt", "--all"],
+        "cwd": "$ZED_WORKTREE_ROOT",
+        "reveal": "no_focus",
+        "tags": ["fmt"],
+    },
+    {
+        // CI-style format check — reports drift without modifying files.
+        "label": "fmt: check",
+        "command": "cargo",
+        "args": ["fmt", "--all", "--", "--check"],
+        "cwd": "$ZED_WORKTREE_ROOT",
+        "reveal": "always",
+        "tags": ["lint", "fmt"],
+    },
+
+    // ══ DOCS ════════════════════════════════════════════════════════════════
+
+    {
+        // Open public API docs in the browser (no private items, no deps).
+        "label": "doc: open",
+        "command": "cargo",
+        "args": ["doc", "--open", "--no-deps"],
+        "cwd": "$ZED_WORKTREE_ROOT",
+        "reveal": "no_focus",
+        "tags": ["docs"],
+    },
+    {
+        // Open docs including private items — useful when reading internals.
+        "label": "doc: open (private items)",
+        "command": "cargo",
+        "args": ["doc", "--open", "--document-private-items", "--no-deps"],
+        "cwd": "$ZED_WORKTREE_ROOT",
+        "reveal": "no_focus",
+        "tags": ["docs"],
+    },
+    {
+        // CI doc build: injects --cfg docsrs and treats warnings as errors.
+        // Matches [package.metadata.docs.rs] rustdoc-args in Cargo.toml.
+        "label": "doc: CI check",
+        "command": "cargo",
+        "args": ["doc", "--no-deps"],
+        "cwd": "$ZED_WORKTREE_ROOT",
+        "env": { "RUSTDOCFLAGS": "--cfg docsrs -D warnings" },
+        "reveal": "always",
+        "tags": ["docs", "lint"],
+    },
+
+    // ══ TESTS ════════════════════════════════════════════════════════════════
+
+    {
+        // All deterministic tests — no API key required.
+        "label": "test: all",
+        "command": "cargo",
+        "args": ["test", "--all-targets", "--", "--nocapture"],
+        "cwd": "$ZED_WORKTREE_ROOT",
+        "env": {
+            "RUST_LOG": "polar_bear_rig_onchain=debug",
+            "RUST_BACKTRACE": "1",
+        },
+        "reveal": "always",
+        "tags": ["test"],
+    },
+    {
+        // Lamports conversions and BalanceResult display — pure Rust, no network.
+        "label": "test: balance",
+        "command": "cargo",
+        "args": ["test", "--test", "test_balance", "--", "--nocapture"],
+        "cwd": "$ZED_WORKTREE_ROOT",
+        "env": {
+            "RUST_LOG": "polar_bear_rig_onchain=debug",
+            "RUST_BACKTRACE": "1",
+        },
+        "reveal": "always",
+        "tags": ["test"],
+    },
+    {
+        // Token mint constants and JupiterClient::dry_run constructor — no network.
+        "label": "test: jupiter",
+        "command": "cargo",
+        "args": ["test", "--test", "test_jupiter", "--", "--nocapture"],
+        "cwd": "$ZED_WORKTREE_ROOT",
+        "env": {
+            "RUST_LOG": "polar_bear_rig_onchain=debug",
+            "RUST_BACKTRACE": "1",
+        },
+        "reveal": "always",
+        "tags": ["test"],
+    },
+    {
+        // task_local isolation, snapshot_active, IsolationReport — no network.
+        "label": "test: signer context",
+        "command": "cargo",
+        "args": ["test", "--test", "test_signer_context", "--", "--nocapture"],
+        "cwd": "$ZED_WORKTREE_ROOT",
+        "env": {
+            "RUST_LOG": "polar_bear_rig_onchain=debug",
+            "RUST_BACKTRACE": "1",
+        },
+        "reveal": "always",
+        "tags": ["test"],
+    },
+    {
+        // Live Anthropic API tests — ANTHROPIC_API_KEY must be set in .env.
+        // Tests are #[ignore]-gated; --ignored makes them opt-in.
+        "label": "test: providers  ⚠ needs ANTHROPIC_API_KEY",
+        "command": "cargo",
+        "args": [
+            "test",
+            "--test",
+            "providers",
+            "--",
+            "--ignored",
+            "--test-threads=1",
+            "--nocapture",
+        ],
+        "cwd": "$ZED_WORKTREE_ROOT",
+        "env": {
+            "RUST_LOG": "polar_bear_rig_onchain=debug",
+            "RUST_BACKTRACE": "full",
+        },
+        "reveal": "always",
+        "tags": ["test", "live"],
+    },
+
+    // ══ RUN — no API key needed ══════════════════════════════════════════════
+
+    {
+        // Full pipeline with --no-agent: balance → quote → signer. No key needed.
+        "label": "run: full --no-agent",
+        "command": "cargo",
+        "args": ["run", "--release", "--", "--mode", "full", "--no-agent"],
+        "cwd": "$ZED_WORKTREE_ROOT",
+        "env": {
+            "RUST_LOG": "polar_bear_rig_onchain=debug",
+            "RUST_BACKTRACE": "1",
+        },
+        "reveal": "always",
+        "tags": ["run"],
+    },
+    {
+        // Solana devnet balance query only.
+        "label": "run: balance",
+        "command": "cargo",
+        "args": ["run", "--release", "--", "--mode", "balance"],
+        "cwd": "$ZED_WORKTREE_ROOT",
+        "env": {
+            "RUST_LOG": "polar_bear_rig_onchain=debug",
+            "RUST_BACKTRACE": "1",
+        },
+        "reveal": "always",
+        "tags": ["run"],
+    },
+    {
+        // Jupiter V6 dry-run SOL→USDC quote only.
+        "label": "run: quote",
+        "command": "cargo",
+        "args": ["run", "--release", "--", "--mode", "quote"],
+        "cwd": "$ZED_WORKTREE_ROOT",
+        "env": {
+            "RUST_LOG": "polar_bear_rig_onchain=debug",
+            "RUST_BACKTRACE": "1",
+        },
+        "reveal": "always",
+        "tags": ["run"],
+    },
+    {
+        // SignerContext task-local isolation demo across 3 concurrent tasks.
+        "label": "run: signer demo",
+        "command": "cargo",
+        "args": ["run", "--release", "--", "--mode", "signer"],
+        "cwd": "$ZED_WORKTREE_ROOT",
+        "env": {
+            "RUST_LOG": "polar_bear_rig_onchain=debug",
+            "RUST_BACKTRACE": "1",
+        },
+        "reveal": "always",
+        "tags": ["run"],
+    },
+
+    // ══ RUN — requires ANTHROPIC_API_KEY ════════════════════════════════════
+
+    {
+        // Full rig-core agent pipeline (PEV loop). Set ANTHROPIC_API_KEY in .env.
+        "label": "run: full pipeline  ⚠ needs ANTHROPIC_API_KEY",
+        "command": "cargo",
+        "args": ["run", "--release", "--", "--mode", "full"],
+        "cwd": "$ZED_WORKTREE_ROOT",
+        "env": {
+            "RUST_LOG": "polar_bear_rig_onchain=debug",
+            "RUST_BACKTRACE": "full",
+        },
+        "reveal": "always",
+        "tags": ["run", "live"],
+    },
+
+    // ══ EXAMPLES ════════════════════════════════════════════════════════════
+
+    {
+        "label": "example: balance_demo",
+        "command": "cargo",
+        "args": ["run", "--example", "balance_demo"],
+        "cwd": "$ZED_WORKTREE_ROOT",
+        "env": { "RUST_LOG": "polar_bear_rig_onchain=debug" },
+        "reveal": "always",
+        "tags": ["example"],
+    },
+    {
+        "label": "example: signer_demo",
+        "command": "cargo",
+        "args": ["run", "--example", "signer_demo"],
+        "cwd": "$ZED_WORKTREE_ROOT",
+        "env": { "RUST_LOG": "polar_bear_rig_onchain=debug" },
+        "reveal": "always",
+        "tags": ["example"],
+    },
+    {
+        "label": "example: jupiter_dry_run",
+        "command": "cargo",
+        "args": ["run", "--example", "jupiter_dry_run"],
+        "cwd": "$ZED_WORKTREE_ROOT",
+        "env": { "RUST_LOG": "polar_bear_rig_onchain=debug" },
+        "reveal": "always",
+        "tags": ["example"],
+    },
 ]
