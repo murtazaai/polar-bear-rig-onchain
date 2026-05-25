@@ -6,23 +6,66 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ---
 
+## [0.6.0] - 2026-05-25
+
+### Added
+
+- **`.zed/tasks.json`** - completely rewritten; 10 stub tasks → 23 fully-configured
+  tasks across 8 tagged groups (`build`, `lint`, `fmt`, `docs`, `test`, `run`,
+  `example`, `live`). Every task now sets `cwd = $ZED_WORKTREE_ROOT`,
+  `RUST_LOG = polar_bear_rig_onchain=debug`, `RUST_BACKTRACE`, and a `reveal`
+  policy. New tasks added: `check`, `build: debug`, `clean`, `fmt: check`,
+  `doc: open`, `doc: open (private items)`, `doc: CI check`, per-module test
+  tasks (`test: balance`, `test: jupiter`, `test: signer context`),
+  `test: providers ⚠` with `--ignored --test-threads=1 --nocapture`,
+  `run: full --no-agent`, and all three examples (`example: balance_demo`
+  was missing entirely). The `doc: CI check` task sets
+  `RUSTDOCFLAGS = "--cfg docsrs -D warnings"` as a proper env string.
+
+- **`.zed/debug.json`** - completely rewritten from an invalid schema to 9
+  correct CodeLLDB DAP launch configurations. The original file used a
+  non-existent `"configurations": [{"build": {...}}]` structure, mixed
+  build/lint/doc commands (which belong in `tasks.json`) into debug configs,
+  pointed to a binary named `"binary"` instead of `polar-bear-rig-onchain`,
+  and had no `args`, `cwd`, or `build_task`. Replaced with proper configs for
+  all four `--mode` variants (keyless and keyed), a custom `--wallet/--amount`
+  variant, and all three examples. Every entry links to `"build_task": "build: debug"`.
+
+- **`.zed/settings.json`** - new file (did not exist). Configures:
+  format-on-save via rust-analyzer/rustfmt, rust-analyzer check command set to
+  `clippy --all-targets -- -D warnings`, inlay hints (type, parameter, chaining,
+  closure capture, lifetime, reborrow), proc macro expansion with `task_local`
+  suppression, autoimport completion, import granularity matching `rustfmt.toml`,
+  code lens (run/debug/references/implementations), and per-language tab/format
+  settings for Rust, TOML, JSON, and Markdown.
+
+- **`README.md`** - new **Zed IDE** section documents all three `.zed/` files:
+  the 23-task group/tag table, the 9 debug config table (with API key column),
+  and a prose summary of every `settings.json` feature. `CONTRIBUTING.md` added
+  to the Related links. Zed added to the Tech stack table.
+
+### Fixed
+
+- **`src/agent/mod.rs`** - `ProviderClient` uncommented for the fourth time.
+  Persistent regression: the import reverts to a comment on every new upload.
+
 ## [0.5.0] - 2026-05-25
 
 ### Fixed
 
-- **`src/agent/mod.rs`** — `ProviderClient` uncommented for the third time.
+- **`src/agent/mod.rs`** - `ProviderClient` uncommented for the third time.
   The import keeps regressing to a comment between uploads. Added a note in the
   module doc to make the requirement explicit: both `CompletionClient` **and**
   `ProviderClient` must be in scope for `.agent()` to resolve on
   `anthropic::Client` with rig-core ≥ 0.36.
 
-- **`tests/providers/anthropic.rs`** — Fixed type error `&Option<String>`
+- **`tests/providers/anthropic.rs`** - Fixed type error `&Option<String>`
   passed where `&str` is required. `cfg.anthropic_api_key` is `Option<String>`
   since v0.3.0; both `#[ignore]`-gated tests now call
   `.as_deref().expect("ANTHROPIC_API_KEY must be set for this test")` to
   extract the `&str` slice. The previous code compiled against the old
   `String` type and was never updated when the field type changed. Although the
-  tests are skipped at runtime without a key, they still must compile — the
+  tests are skipped at runtime without a key, they still must compile - the
   type error blocked `cargo test` (and `cargo build --tests`) even with no key
   present.
 

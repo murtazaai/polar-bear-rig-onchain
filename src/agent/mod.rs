@@ -29,8 +29,7 @@ use std::sync::Arc;
 
 use anyhow::{Context, Result};
 use rig::{
-    client::CompletionClient,
-    // client::ProviderClient,
+    client::{CompletionClient, ProviderClient},
     completion::Prompt,
     providers::anthropic,
 };

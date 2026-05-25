@@ -1,4 +1,4 @@
-// polar-bear-rig-onchain — Zed task definitions
+// polar-bear-rig-onchain - Zed task definitions
 // Run any task via: Cmd/Ctrl+Shift+P → "task: spawn" (or bind to a key)
 // Tags let you filter in the task picker.
 [
@@ -15,7 +15,7 @@
         "tags": ["build", "lint"],
     },
     {
-        // Debug build — used as the pre-launch step by every debug.json entry.
+        // Debug build - used as the pre-launch step by every debug.json entry.
         "label": "build: debug",
         "command": "cargo",
         "args": ["build"],
@@ -35,7 +35,7 @@
         "tags": ["build"],
     },
     {
-        // Wipe target/ — useful when switching toolchains or clearing stale state.
+        // Wipe target/ - useful when switching toolchains or clearing stale state.
         "label": "clean",
         "command": "cargo",
         "args": ["clean"],
@@ -47,7 +47,7 @@
     // ══ LINT / FORMAT ════════════════════════════════════════════════════════
 
     {
-        // Full Clippy pass — mirrors CI. Respects Cargo.toml [lints.clippy] table
+        // Full Clippy pass - mirrors CI. Respects Cargo.toml [lints.clippy] table
         // and .clippy.toml thresholds (msrv 1.85.0, cognitive-complexity 30).
         "label": "clippy",
         "command": "cargo",
@@ -66,7 +66,7 @@
         "tags": ["fmt"],
     },
     {
-        // CI-style format check — reports drift without modifying files.
+        // CI-style format check - reports drift without modifying files.
         "label": "fmt: check",
         "command": "cargo",
         "args": ["fmt", "--all", "--", "--check"],
@@ -87,7 +87,7 @@
         "tags": ["docs"],
     },
     {
-        // Open docs including private items — useful when reading internals.
+        // Open docs including private items - useful when reading internals.
         "label": "doc: open (private items)",
         "command": "cargo",
         "args": ["doc", "--open", "--document-private-items", "--no-deps"],
@@ -110,7 +110,7 @@
     // ══ TESTS ════════════════════════════════════════════════════════════════
 
     {
-        // All deterministic tests — no API key required.
+        // All deterministic tests - no API key required.
         "label": "test: all",
         "command": "cargo",
         "args": ["test", "--all-targets", "--", "--nocapture"],
@@ -123,7 +123,7 @@
         "tags": ["test"],
     },
     {
-        // Lamports conversions and BalanceResult display — pure Rust, no network.
+        // Lamports conversions and BalanceResult display - pure Rust, no network.
         "label": "test: balance",
         "command": "cargo",
         "args": ["test", "--test", "test_balance", "--", "--nocapture"],
@@ -136,7 +136,7 @@
         "tags": ["test"],
     },
     {
-        // Token mint constants and JupiterClient::dry_run constructor — no network.
+        // Token mint constants and JupiterClient::dry_run constructor - no network.
         "label": "test: jupiter",
         "command": "cargo",
         "args": ["test", "--test", "test_jupiter", "--", "--nocapture"],
@@ -149,7 +149,7 @@
         "tags": ["test"],
     },
     {
-        // task_local isolation, snapshot_active, IsolationReport — no network.
+        // task_local isolation, snapshot_active, IsolationReport - no network.
         "label": "test: signer context",
         "command": "cargo",
         "args": ["test", "--test", "test_signer_context", "--", "--nocapture"],
@@ -162,7 +162,7 @@
         "tags": ["test"],
     },
     {
-        // Live Anthropic API tests — ANTHROPIC_API_KEY must be set in .env.
+        // Live Anthropic API tests - ANTHROPIC_API_KEY must be set in .env.
         // Tests are #[ignore]-gated; --ignored makes them opt-in.
         "label": "test: providers  ⚠ needs ANTHROPIC_API_KEY",
         "command": "cargo",
@@ -184,7 +184,7 @@
         "tags": ["test", "live"],
     },
 
-    // ══ RUN — no API key needed ══════════════════════════════════════════════
+    // ══ RUN - no API key needed ══════════════════════════════════════════════
 
     {
         // Full pipeline with --no-agent: balance → quote → signer. No key needed.
@@ -239,7 +239,7 @@
         "tags": ["run"],
     },
 
-    // ══ RUN — requires ANTHROPIC_API_KEY ════════════════════════════════════
+    // ══ RUN - requires ANTHROPIC_API_KEY ════════════════════════════════════
 
     {
         // Full rig-core agent pipeline (PEV loop). Set ANTHROPIC_API_KEY in .env.
