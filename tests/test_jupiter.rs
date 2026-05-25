@@ -4,9 +4,7 @@
 //! the `JupiterClient::dry_run` constructor. Network calls are not made; all
 //! tests are purely deterministic.
 
-use polar_bear_rig_onchain::onchain::jupiter::{
-    DEFAULT_SLIPPAGE_BPS, SOL_MINT, USDC_MINT,
-};
+use polar_bear_rig_onchain::onchain::jupiter::{DEFAULT_SLIPPAGE_BPS, SOL_MINT, USDC_MINT};
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
@@ -14,8 +12,7 @@ use polar_bear_rig_onchain::onchain::jupiter::{
 #[test]
 fn test_sol_mint_address() {
     assert_eq!(
-        SOL_MINT,
-        "So11111111111111111111111111111111111111112",
+        SOL_MINT, "So11111111111111111111111111111111111111112",
         "SOL_MINT must be the wrapped-SOL mainnet address"
     );
 }
@@ -24,8 +21,7 @@ fn test_sol_mint_address() {
 #[test]
 fn test_usdc_mint_address() {
     assert_eq!(
-        USDC_MINT,
-        "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        USDC_MINT, "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
         "USDC_MINT must be the mainnet USDC address"
     );
 }

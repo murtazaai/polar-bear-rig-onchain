@@ -6,7 +6,7 @@
 //! keypair.
 
 use polar_bear_rig_onchain::onchain::signer::{
-    LocalSolanaSigner, IsolationReport, snapshot_active, with_signer,
+    IsolationReport, LocalSolanaSigner, snapshot_active, with_signer,
 };
 
 // ── helpers ───────────────────────────────────────────────────────────────────
@@ -44,7 +44,10 @@ async fn test_signer_context_isolation() {
     // The two public keys must be different (independent ephemeral keypairs).
     let pk_a = r1.unwrap();
     let pk_b = r2.unwrap();
-    assert_ne!(pk_a, pk_b, "each task must get a distinct ephemeral keypair");
+    assert_ne!(
+        pk_a, pk_b,
+        "each task must get a distinct ephemeral keypair"
+    );
 }
 
 /// Inside a [`with_signer`] scope, [`snapshot_active`] must return `Some`.
@@ -55,9 +58,15 @@ async fn test_snapshot_active_returns_some_inside_scope() {
 
     with_signer(signer, || async {
         let snap = snapshot_active();
-        assert!(snap.is_some(), "snapshot_active must return Some inside with_signer");
+        assert!(
+            snap.is_some(),
+            "snapshot_active must return Some inside with_signer"
+        );
         let s = snap.unwrap();
-        assert_eq!(s.label, expected_label, "snapshot label must match signer label");
+        assert_eq!(
+            s.label, expected_label,
+            "snapshot label must match signer label"
+        );
         assert!(!s.pubkey.is_empty(), "pubkey must not be empty");
         assert!(!s.context_id.is_empty(), "context_id must not be empty");
         Ok::<(), anyhow::Error>(())
@@ -90,7 +99,10 @@ fn test_ephemeral_signer_produces_valid_pubkey() {
     let s = LocalSolanaSigner::ephemeral("pubkey-test");
     let pk = s.pubkey().to_string();
     assert!(!pk.is_empty(), "pubkey must not be empty");
-    assert!(pk.len() >= 32, "base-58 pubkey must be at least 32 characters");
+    assert!(
+        pk.len() >= 32,
+        "base-58 pubkey must be at least 32 characters"
+    );
 }
 
 /// [`IsolationReport::seal`] must flip `boundary_sealed` to `true`.
@@ -102,5 +114,8 @@ fn test_isolation_report_seal() {
     assert!(!report.boundary_sealed);
 
     let sealed = report.seal();
-    assert!(sealed.boundary_sealed, "seal() must set boundary_sealed = true");
+    assert!(
+        sealed.boundary_sealed,
+        "seal() must set boundary_sealed = true"
+    );
 }
