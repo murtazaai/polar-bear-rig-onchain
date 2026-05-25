@@ -42,7 +42,7 @@ async fn test_agent_returns_non_empty_response() {
 
     let client = anthropic::Client::new(&cfg.anthropic_api_key).unwrap();
     let agent = client
-        .agent("claude-haiku-4-5")
+        .agent("claude-haiku-4-5-20251001")
         .preamble("Reply with exactly the word: PONG")
         .build();
 

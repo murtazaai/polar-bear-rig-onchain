@@ -8,16 +8,20 @@
 //! ## Usage
 //!
 //! ```text
-//! # Full pipeline (default)
+//! # Full pipeline with rig-core agent (requires ANTHROPIC_API_KEY)
 //! cargo run --release -- --mode full --wallet <DEVNET_ADDRESS> --amount 0.1
 //!
-//! # Individual subsystems
+//! # Full pipeline, skip the agent (no API key needed)
+//! cargo run --release -- --mode full --no-agent
+//!
+//! # Individual subsystems (no API key needed)
 //! cargo run --release -- --mode balance
 //! cargo run --release -- --mode quote
 //! cargo run --release -- --mode signer
 //! ```
 //!
-//! Set `ANTHROPIC_API_KEY` in `.env` or the shell environment before running.
+//! `ANTHROPIC_API_KEY` is only required for `--mode full` **without** `--no-agent`.
+//! Set it in `.env` (copy `.env.example`) or export it in the shell.
 
 use std::sync::Arc;
 
@@ -35,12 +39,14 @@ use polar_bear_rig_onchain::{agent, config::Config, onchain};
 #[derive(Debug, Clone, ValueEnum)]
 enum Mode {
     /// Run the full pipeline: `SignerContext` → balance → Jupiter quote → isolation log.
+    ///
+    /// Requires `ANTHROPIC_API_KEY` unless `--no-agent` is also passed.
     Full,
-    /// Run only the Solana devnet balance query.
+    /// Query Solana devnet balance only. No API key needed.
     Balance,
-    /// Run only the Jupiter V6 dry-run swap quote.
+    /// Fetch a Jupiter V6 dry-run swap quote only. No API key needed.
     Quote,
-    /// Run the `SignerContext` task-local isolation demo (3 concurrent tasks).
+    /// Run the `SignerContext` task-local isolation demo (3 concurrent tasks). No API key needed.
     Signer,
 }
 
@@ -62,6 +68,15 @@ struct Args {
     /// SOL amount to quote via Jupiter (in SOL units, e.g. `0.1`).
     #[arg(short, long, default_value_t = 0.1)]
     amount: f64,
+
+    /// Skip the rig-core agent call even in `--mode full`.
+    ///
+    /// When set, the full pipeline runs balance → quote → signer directly
+    /// without constructing the Anthropic client, so `ANTHROPIC_API_KEY` is
+    /// not required. Useful for local development, CI, or smoke-testing
+    /// the on-chain subsystems without an API key.
+    #[arg(long, default_value_t = false)]
+    no_agent: bool,
 }
 
 // ── Entry point ───────────────────────────────────────────────────────────────
@@ -77,6 +92,10 @@ async fn main() -> Result<()> {
         .init();
 
     let args = Args::parse();
+
+    // Config::from_env() is infallible: ANTHROPIC_API_KEY becomes Option<String>.
+    // Validation against None happens inside agent::build(), which is only
+    // called for --mode full without --no-agent.
     let mut cfg = Config::from_env()?;
 
     // CLI --wallet overrides WALLET_ADDRESS from env.
@@ -88,14 +107,22 @@ async fn main() -> Result<()> {
     info!("║  POLAR BEAR RIG ONCHAIN  ·  rig-onchain-kit Platform    ║");
     info!("╚══════════════════════════════════════════════════════════╝");
     info!(
-        mode   = ?args.mode,
-        wallet = %cfg.wallet_address,
-        amount = args.amount,
+        mode          = ?args.mode,
+        wallet        = %cfg.wallet_address,
+        amount        = args.amount,
+        no_agent      = args.no_agent,
+        api_key_present = cfg.anthropic_api_key.is_some(),
         "Starting platform"
     );
 
     match args.mode {
-        Mode::Full => run_full(&cfg, args.amount).await?,
+        Mode::Full => {
+            if args.no_agent {
+                run_full_no_agent(&cfg, args.amount).await?;
+            } else {
+                run_full(&cfg, args.amount).await?;
+            }
+        }
         Mode::Balance => run_balance(&cfg).await?,
         Mode::Quote => run_quote(&cfg, args.amount).await?,
         Mode::Signer => onchain::demo_signer(&cfg).await?,
@@ -107,11 +134,15 @@ async fn main() -> Result<()> {
 
 // ── Mode implementations ──────────────────────────────────────────────────────
 
-/// Full pipeline: `SignerContext` → rig-core agent → balance → quote → isolation log.
+/// Full pipeline via rig-core agent: `SignerContext` → balance → quote → isolation log.
+///
+/// Requires `ANTHROPIC_API_KEY`. For a keyless run use `--no-agent`.
 async fn run_full(cfg: &Config, amount: f64) -> Result<()> {
     let solana = Arc::new(onchain::balance::SolanaClient::devnet());
     let jupiter = Arc::new(onchain::jupiter::JupiterClient::dry_run());
 
+    // agent::build validates cfg.anthropic_api_key is Some and returns a clear
+    // error message when it is not.
     let agent = agent::build(cfg, Arc::clone(&solana), Arc::clone(&jupiter))?;
 
     let prompt = format!(
@@ -134,14 +165,40 @@ async fn run_full(cfg: &Config, amount: f64) -> Result<()> {
     println!("║  AGENT PIPELINE RESULT                                   ║");
     println!("╚══════════════════════════════════════════════════════════╝\n");
     println!("{response}");
-
     println!("\n✓  polar-bear-rig-onchain pipeline complete.");
     println!("   Network: devnet | Swap: DRY-RUN | Boundary: SEALED");
 
     Ok(())
 }
 
-/// Balance-only mode: query and print Solana devnet balance.
+/// Full pipeline **without** the rig-core agent. No `ANTHROPIC_API_KEY` needed.
+///
+/// Runs balance → quote → signer directly and prints each result. The output
+/// is equivalent to running the three keyless modes in sequence; use this to
+/// smoke-test the on-chain subsystems in CI or local dev without a key.
+async fn run_full_no_agent(cfg: &Config, amount: f64) -> Result<()> {
+    info!("[FULL --no-agent] running pipeline without rig-core agent (no API key required)");
+
+    println!("\n╔══════════════════════════════════════════════════════════╗");
+    println!("║  FULL PIPELINE  ·  --no-agent  ·  No API key required   ║");
+    println!("╚══════════════════════════════════════════════════════════╝\n");
+
+    println!("── Step 1: Solana devnet balance ──────────────────────────");
+    run_balance(cfg).await?;
+
+    println!("\n── Step 2: Jupiter V6 dry-run quote ───────────────────────");
+    run_quote(cfg, amount).await?;
+
+    println!("\n── Step 3: SignerContext isolation demo ────────────────────");
+    onchain::demo_signer(cfg).await?;
+
+    println!("\n✓  polar-bear-rig-onchain pipeline complete (agent skipped).");
+    println!("   Network: devnet | Swap: DRY-RUN | Boundary: SEALED | Agent: SKIPPED");
+
+    Ok(())
+}
+
+/// Balance-only mode: query and print Solana devnet balance. No API key needed.
 #[allow(clippy::unused_async)]
 async fn run_balance(cfg: &Config) -> Result<()> {
     let client = onchain::balance::SolanaClient::devnet();
@@ -151,7 +208,7 @@ async fn run_balance(cfg: &Config) -> Result<()> {
     Ok(())
 }
 
-/// Quote-only mode: fetch a Jupiter dry-run quote and print it.
+/// Quote-only mode: fetch a Jupiter dry-run quote and print it. No API key needed.
 async fn run_quote(cfg: &Config, amount: f64) -> Result<()> {
     use onchain::jupiter::{DEFAULT_SLIPPAGE_BPS, JupiterClient, SOL_MINT, USDC_MINT};
     use onchain::types::Lamports;

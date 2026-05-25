@@ -11,18 +11,29 @@
 //!
 //! ## Rig client trait requirements (rig-core ≥ 0.36)
 //!
-//! Calling `.agent()` on `anthropic::Client` requires [`rig::client::CompletionClient`]
-//! in scope so the `.agent()` builder method resolves.
+//! Both [`rig::client::CompletionClient`] **and** [`rig::client::ProviderClient`]
+//! must be in scope for the `.agent()` builder method to resolve on
+//! `anthropic::Client`. `Client::new` is fallible in rig-core 0.36+ - always
+//! propagate with `?`.
 //!
-//! `Client::new` is fallible in rig-core 0.36+ - always propagate with `?`.
+//! ## API key requirement
+//!
+//! [`build`] requires `cfg.anthropic_api_key` to be `Some`. It returns a
+//! descriptive error when the key is absent so that `--mode balance`,
+//! `--mode quote`, and `--mode signer` can all run without the key - only
+//! `--mode full` calls this function.
 
 pub mod tools;
 
 use std::sync::Arc;
 
-use anyhow::Result;
-use rig::{client::CompletionClient, completion::Prompt, providers::anthropic};
-// use rig::client::ProviderClient;
+use anyhow::{Context, Result};
+use rig::{
+    client::CompletionClient,
+    // client::ProviderClient,
+    completion::Prompt,
+    providers::anthropic,
+};
 
 use crate::config::Config;
 use crate::onchain::{balance::SolanaClient, jupiter::JupiterClient};
@@ -52,7 +63,9 @@ quote (SOL → USDC, price impact, routes), and isolation status.";
 ///
 /// # Errors
 ///
-/// Returns `Err` if `anthropic::Client::new` fails (invalid API key format).
+/// Returns `Err` if:
+/// * `cfg.anthropic_api_key` is `None` (key absent from environment).
+/// * `anthropic::Client::new` rejects the key format.
 ///
 /// # Examples
 ///
@@ -73,10 +86,17 @@ pub fn build(
     solana: Arc<SolanaClient>,
     jupiter: Arc<JupiterClient>,
 ) -> Result<impl Prompt> {
-    // Client::new is fallible in rig-core 0.36+ - propagate with ?.
-    let client = anthropic::Client::new(&cfg.anthropic_api_key)?;
+    // Validate the key here so that modes that don't call build() (balance,
+    // quote, signer) can run freely without ANTHROPIC_API_KEY.
+    let api_key = cfg
+        .anthropic_api_key
+        .as_deref()
+        .context("ANTHROPIC_API_KEY is required for --mode full; set it in .env or the shell")?;
 
-    // CompletionClient must be in scope for `.agent()` to resolve (rig-core ≥ 0.36).
+    // Client::new is fallible in rig-core 0.36+ - propagate with ?.
+    // Both CompletionClient and ProviderClient must be in scope for .agent().
+    let client = anthropic::Client::new(api_key)?;
+
     let agent = client
         .agent("claude-sonnet-4-6")
         .preamble(AGENT_PREAMBLE)

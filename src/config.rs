@@ -1,19 +1,20 @@
 //! Runtime configuration loaded from environment variables.
 //!
-//! All fields are read at startup via [`Config::from_env`]. The only required
-//! variable is `ANTHROPIC_API_KEY`; every other variable has a safe default
-//! that keeps the binary in dry-run mode against Solana devnet.
+//! All fields are read at startup via [`Config::from_env`]. `ANTHROPIC_API_KEY`
+//! is optional at the config level - it is only required when `--mode full`
+//! actually constructs the rig-core agent. All other modes (`balance`, `quote`,
+//! `signer`) work without it.
 //!
 //! ## Environment variables
 //!
 //! | Variable | Required | Default |
 //! |---|---|---|
-//! | `ANTHROPIC_API_KEY` | ✅ | - |
+//! | `ANTHROPIC_API_KEY` | ❌ (only for `--mode full`) | - |
 //! | `SOLANA_RPC_URL` | ❌ | `https://api.devnet.solana.com` |
 //! | `WALLET_ADDRESS` | ❌ | (public devnet address) |
 //! | `DRY_RUN` | ❌ | `true` |
 
-use anyhow::{Context, Result};
+use anyhow::Result;
 
 /// Default Solana devnet wallet used when `WALLET_ADDRESS` is absent.
 ///
@@ -23,11 +24,16 @@ pub const DEFAULT_DEVNET_WALLET: &str = "4Nd1mBQtrMJVYVfKf2PX99kkXz36o2gWHa9zSX6
 /// Global runtime configuration for the on-chain agent platform.
 ///
 /// Constructed once at startup and shared by reference across all subsystems.
-/// Cloning is cheap - all fields are either `String` or `bool`.
+/// Cloning is cheap - all fields are either `String`, `Option<String>`, or `bool`.
 #[derive(Debug, Clone)]
 pub struct Config {
-    /// Anthropic API key forwarded to every `rig-core` client.
-    pub anthropic_api_key: String,
+    /// Anthropic API key forwarded to `rig-core` when building the agent.
+    ///
+    /// `None` when `ANTHROPIC_API_KEY` is absent from the environment.
+    /// Required only for `--mode full`; [`crate::agent::build`] returns a
+    /// clear error if it is called without a key. All other modes never
+    /// construct the agent and therefore work without the key.
+    pub anthropic_api_key: Option<String>,
 
     /// Solana JSON-RPC endpoint. Defaults to Solana devnet.
     pub solana_rpc_url: String,
@@ -53,21 +59,25 @@ impl Config {
     /// Call [`dotenvy::dotenv`] before this function to load variables from a
     /// `.env` file; `main` does this automatically.
     ///
+    /// This function always succeeds. `ANTHROPIC_API_KEY` is captured as
+    /// `Some(key)` when present and `None` when absent; validation is deferred
+    /// to [`crate::agent::build`], which is only called for `--mode full`.
+    ///
     /// # Errors
     ///
-    /// Returns `Err` if `ANTHROPIC_API_KEY` is not present in the environment.
+    /// Currently infallible; `Result` is kept for forward-compatibility.
     ///
     /// # Examples
     ///
-    /// ```rust,no_run
+    /// ```rust
     /// use polar_bear_rig_onchain::config::Config;
     ///
-    /// let cfg = Config::from_env().expect("ANTHROPIC_API_KEY must be set");
+    /// // Works even without ANTHROPIC_API_KEY in the environment.
+    /// let cfg = Config::from_env().expect("config must load");
     /// ```
     pub fn from_env() -> Result<Self> {
         Ok(Self {
-            anthropic_api_key: std::env::var("ANTHROPIC_API_KEY")
-                .context("ANTHROPIC_API_KEY not set - copy .env.example to .env")?,
+            anthropic_api_key: std::env::var("ANTHROPIC_API_KEY").ok(),
             solana_rpc_url: std::env::var("SOLANA_RPC_URL")
                 .unwrap_or_else(|_| "https://api.devnet.solana.com".to_string()),
             wallet_address: std::env::var("WALLET_ADDRESS")
