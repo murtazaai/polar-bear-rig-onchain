@@ -295,4 +295,22 @@
         "reveal": "always",
         "tags": ["lint", "test", "build"],
     },
+    // // ══════════════════════════════════════════════════════════════════════════
+    // // § publish · full publish simulation — fix everything it flags
+    // // ══════════════════════════════════════════════════════════════════════════
+    // {
+    //     "label": "publish · full publish simulation — fix everything it flags",
+    //     "command": "cargo",
+    //     "args": ["publish", "--dry-run"],
+    //     "tags": ["publish"],
+    // },
+    // // ══════════════════════════════════════════════════════════════════════════
+    // // § publish · full publish — publish to crates.io
+    // // ══════════════════════════════════════════════════════════════════════════
+    // {
+    //     "label": "publish · full publish",
+    //     "command": "cargo",
+    //     "args": ["publish"],
+    //     "tags": ["publish"],
+    // },
 ]
