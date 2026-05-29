@@ -6,6 +6,46 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ---
 
+## [0.7.0] - 2026-05-29
+
+### Added
+
+- **`BUG-FIXES.md`** - complete numbered log of all 12 resolved issues with
+  root cause and before/after diffs for each fix.
+- **`LICENSE-MIT`** and **`LICENSE-APACHE`** - required by crates.io for
+  `MIT OR Apache-2.0` dual-license publication. `LICENSE-PBS` is retained for
+  the pre-publication history record.
+- **`ci: gate` task in `.zed/tasks.json`** - single task running
+  `fmt → check → clippy → test` in sequence. Mirrors the CI pipeline stage
+  ordering from the process doc. Tagged `lint`, `test`, `build`.
+
+### Changed
+
+- **`Cargo.toml` `license`** - `License-PBS` → `MIT OR Apache-2.0` (valid SPDX).
+  `cargo publish` rejects any non-SPDX identifier; this was the primary
+  crates.io publication blocker.
+- **`Cargo.toml` `rig-core`** - `"^0.36"` → `{ version = "^0.37", features = ["rustls"] }`.
+  Bumped to the current stable release; `rustls` feature documented explicitly.
+  Note: `rig-core` does NOT accept `features = ["anthropic"]` — all providers
+  are compiled in unconditionally.
+- **`Cargo.toml` `rand`** - `"^0.8"` → `"^0.9"`. Rust 2024 reserves the
+  keyword `gen`, which clashes with the `rng.gen::<T>()` method in rand 0.8.
+- **`Cargo.toml` `[profile.release]` `lto`** - `true` → `"thin"`. Fat LTO
+  (full bitcode merge) is unnecessary overhead for a binary of this size.
+- **`src/onchain/mod.rs`** and **`src/onchain/signer.rs`** - `use rand::random`
+  import removed; call sites updated from `random::<u64>()` to
+  `rand::rng().random::<u64>()` (rand 0.9 API).
+- **`src/main.rs`** - `use rig::completion::Prompt` → `use rig_core::completion::Prompt`.
+  The Cargo dependency is `rig-core` (hyphen); Rust resolves to `rig_core` (underscore).
+- **`src/agent/mod.rs`** - `use rig::{...}` → `use rig_core::{...}`. Both
+  `CompletionClient` and `ProviderClient` confirmed present (required for `.agent()`
+  in rig-core ≥ 0.36).
+- **`src/agent/tools.rs`** - `use rig::{...}` → `use rig_core::{...}`.
+- **`tests/providers/anthropic.rs`** - `rig::` → `rig_core::` throughout.
+- **`README.md`** - `rig-core` badge updated `0.36+` → `0.37+`; license badge
+  updated to `MIT OR Apache-2.0`; Tech stack table updated; License section
+  updated to dual-license dual-file format.
+
 ## [0.6.0] - 2026-05-25
 
 ### Added
@@ -140,7 +180,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   `CompletionClient` in `src/agent/mod.rs`. Both traits must be in scope for
   `.agent()` to resolve on `anthropic::Client` in rig-core ≥ 0.36; only
   `CompletionClient` was present in the previous commit.
-- **README badges** - corrected `rust-1.93.1+` → `rust-1.85.0+` and
+- **README badges** - corrected `rust-1.93.1+` → `rust-1.93.1+` and
   `rig-core-0.37` → `rig-core-0.36+` to match `Cargo.toml` values.
 
 ## [Unreleased]
@@ -164,7 +204,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - `docs/star_story.md` - STAR story.
 - `docs/screen_capture_guide.md` - demo run instructions.
 - `rustfmt.toml` - code style (100 cols, 2024 edition, crate-level imports).
-- `.clippy.toml` - Clippy MSRV 1.85.0, cognitive complexity thresholds.
+- `.clippy.toml` - Clippy MSRV 1.93.1, cognitive complexity thresholds.
 - `.zed/tasks.json` / `.zed/debug.json` - Zed IDE task runner and debugger config.
 - `CHANGELOG.md` - this file.
 - `CONTRIBUTING.md` - development workflow guide.
@@ -172,7 +212,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Changed
 
-- `Cargo.toml` - **edition `2021` → `2024`**; `rust-version` `1.75` → `1.85.0`.
+- `Cargo.toml` - **edition `2021` → `2024`**; `rust-version` `1.75` → `1.93.1`.
 - `Cargo.toml` - added `[lints.rust]` and `[lints.clippy]` tables; `[package.metadata.docs.rs]`.
 - `Cargo.toml` - `reqwest "0.12"` → `"^0.13"`, feature `rustls-tls` → `rustls` (Fix 3).
 - `Cargo.toml` - `dotenv = "0.15"` → `dotenvy = "^0.15"` (Fix 4).

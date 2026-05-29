@@ -27,7 +27,7 @@ use std::sync::Arc;
 
 use anyhow::Result;
 use clap::{Parser, ValueEnum};
-use rig::completion::Prompt;
+use rig_core::completion::Prompt;
 use tracing::info;
 use tracing_subscriber::EnvFilter;
 

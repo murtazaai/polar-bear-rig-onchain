@@ -7,7 +7,7 @@ polar-bear-rig-onchain/
 ├── Cargo.toml             Rust 2024 edition; all dependencies; lint + metadata tables
 ├── Cargo.lock             Committed (binary crate); delete + regenerate on dep changes
 ├── rustfmt.toml           Code-style rules (100 cols, 2024 edition, crate-level imports)
-├── .clippy.toml           Clippy config (MSRV 1.85.0, complexity thresholds)
+├── .clippy.toml           Clippy config (MSRV 1.93.1, complexity thresholds)
 ├── .gitignore             Focused Rust-only ignore file
 ├── .env.example           Template for ANTHROPIC_API_KEY and other env vars
 ├── LICENSE-PBS            Polar Bear Systems proprietary licence

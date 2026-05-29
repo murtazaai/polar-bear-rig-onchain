@@ -48,7 +48,7 @@
 
     {
         // Full Clippy pass - mirrors CI. Respects Cargo.toml [lints.clippy] table
-        // and .clippy.toml thresholds (msrv 1.85.0, cognitive-complexity 30).
+        // and .clippy.toml thresholds (msrv 1.93.1, cognitive-complexity 30).
         "label": "clippy",
         "command": "cargo",
         "args": ["clippy", "--all-targets", "--", "-D", "warnings"],
@@ -275,13 +275,24 @@
         "reveal": "always",
         "tags": ["example"],
     },
+    // ══ CI GATE ══════════════════════════════════════════════════════════════
+
     {
-        "label": "example: jupiter_dry_run",
-        "command": "cargo",
-        "args": ["run", "--example", "jupiter_dry_run"],
+        // Single task that runs the full CI sequence: fmt → check → clippy → test.
+        // All steps must pass. SKIP_LLM=1 / no API key needed.
+        "label": "ci: gate",
+        "command": "bash",
+        "args": [
+            "-c",
+            "cargo fmt --all -- --check && cargo check --all-targets && cargo clippy --all-targets -- -D warnings && cargo test --all-targets",
+        ],
         "cwd": "$ZED_WORKTREE_ROOT",
-        "env": { "RUST_LOG": "polar_bear_rig_onchain=debug" },
+        "env": {
+            "RUST_LOG": "polar_bear_rig_onchain=debug",
+            "RUST_BACKTRACE": "1",
+            "RUSTDOCFLAGS": "--cfg docsrs -D warnings",
+        },
         "reveal": "always",
-        "tags": ["example"],
+        "tags": ["lint", "test", "build"],
     },
 ]

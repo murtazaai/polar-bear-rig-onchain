@@ -23,7 +23,7 @@
 use std::sync::Arc;
 
 use anyhow::Result;
-use rand::random;
+
 use serde::Serialize;
 use solana_sdk::{
     pubkey::Pubkey,
@@ -65,7 +65,7 @@ impl SignerContextInner {
     fn new(keypair: Keypair, label: impl Into<String>) -> Self {
         let label = label.into();
         let pubkey = keypair.pubkey().to_string();
-        let context_id = format!("{:016x}", random::<u64>());
+        let context_id = format!("{:016x}", rand::rng().random::<u64>());
         let created_at_secs = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
             .unwrap_or_default()

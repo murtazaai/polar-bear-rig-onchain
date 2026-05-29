@@ -13,7 +13,7 @@
 
 | Tool | Version | Install |
 |---|---|---|
-| Rust stable toolchain | ≥ 1.85.0 | `rustup update stable` |
+| Rust stable toolchain | ≥ 1.93.1 | `rustup update stable` |
 | `rustfmt` | (with toolchain) | `rustup component add rustfmt` |
 | `clippy` | (with toolchain) | `rustup component add clippy` |
 

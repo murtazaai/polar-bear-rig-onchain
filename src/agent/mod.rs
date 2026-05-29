@@ -1,6 +1,6 @@
 //! rig-core on-chain agent pipeline.
 //!
-//! Exposes [`build`] which assembles a `rig-core` [`rig::completion::Prompt`]
+//! Exposes [`build`] which assembles a `rig-core` [`rig_core::completion::Prompt`]
 //! agent backed by `claude-sonnet-4-6` with three tools wired in:
 //!
 //! | Tool | Trigger |
@@ -9,9 +9,9 @@
 //! | `jupiter_quote` | swap quote step |
 //! | `signer_isolation_log` | audit / isolation confirmation step |
 //!
-//! ## Rig client trait requirements (rig-core ≥ 0.36)
+//! ## Rig client trait requirements (rig-core ≥ 0.37)
 //!
-//! Both [`rig::client::CompletionClient`] **and** [`rig::client::ProviderClient`]
+//! Both [`rig_core::client::CompletionClient`] **and** [`rig_core::client::ProviderClient`]
 //! must be in scope for the `.agent()` builder method to resolve on
 //! `anthropic::Client`. `Client::new` is fallible in rig-core 0.36+ - always
 //! propagate with `?`.
@@ -28,7 +28,7 @@ pub mod tools;
 use std::sync::Arc;
 
 use anyhow::{Context, Result};
-use rig::{
+use rig_core::{
     client::{CompletionClient, ProviderClient},
     completion::Prompt,
     providers::anthropic,

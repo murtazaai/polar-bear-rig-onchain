@@ -1,11 +1,11 @@
 [package]
 name        = "polar-bear-rig-onchain"
-version     = "0.6.0"
+version     = "0.7.0"
 edition     = "2024"
-rust-version = "1.85.0"
+rust-version = "1.93.1"
 description = "rig-onchain-kit agent: Solana balance query → Jupiter swap (dry-run) → SignerContext isolation. Testnet only."
 repository  = "https://github.com/murtazaai/polar-bear-rig-onchain"
-license     = "License-PBS"
+license     = "MIT OR Apache-2.0"
 keywords    = ["rig", "solana", "defi", "hft", "signer"]
 categories  = ["finance", "asynchronous"]
 readme      = "README.md"
@@ -35,7 +35,7 @@ missing_errors_doc      = "allow"
 
 # ── CORE RIG (ARC) ────────────────────────────────────────────────
 [dependencies]
-rig-core = "^0.36"
+rig-core = { version = "^0.37", features = ["rustls"] }
 
 # Uncomment when rig-onchain-kit is published to crates.io:
 # rig-onchain-kit = { version = "0.1", features = ["full"] }
@@ -74,7 +74,7 @@ thiserror = "^2"
 dotenvy = "^0.15"
 
 # ── UTILITIES ─────────────────────────────────────────────────────
-rand = "^0.8"
+rand = "^0.9"
 
 # ── DEV / TEST ────────────────────────────────────────────────────
 [dev-dependencies]
@@ -86,7 +86,7 @@ mockall    = "^0.13"
 # minimise binary size through LTO and single-codegen-unit compilation.
 [profile.release]
 opt-level     = 3
-lto           = true
+lto           = "thin"
 codegen-units = 1
 panic         = "abort"
 strip         = "debuginfo"

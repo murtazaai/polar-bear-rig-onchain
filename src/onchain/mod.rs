@@ -2,11 +2,10 @@
 //!
 //! Exposes two public entry points consumed by `crate::main`:
 //!
-//! * [`execute_pipeline`] - wraps a Solana balance query and a Jupiter quote
-//!   inside an isolated [`signer::LocalSolanaSigner`] context and returns an
-//!   [`OnchainResult`].
-//! * [`demo_signer`] - spawns three concurrent tasks to demonstrate that the
-//!   task-local signer storage is fully isolated per Tokio task.
+//! * [`execute_pipeline`] - wraps a Solana balance query and a Jupiter quote inside an isolated
+//!   [`signer::LocalSolanaSigner`] context and returns an [`OnchainResult`].
+//! * [`demo_signer`] - spawns three concurrent tasks to demonstrate that the task-local signer
+//!   storage is fully isolated per Tokio task.
 //!
 //! ## Security boundary
 //!
@@ -22,14 +21,13 @@ pub mod signer;
 pub mod types;
 
 use anyhow::Result;
-use rand::random;
-use tracing::info;
-
-use crate::config::Config;
 use balance::{BalanceResult, SolanaClient};
 use jupiter::{DEFAULT_SLIPPAGE_BPS, JupiterClient, JupiterQuote, SOL_MINT, USDC_MINT};
 use signer::{LocalSolanaSigner, with_signer};
+use tracing::info;
 use types::Lamports;
+
+use crate::config::Config;
 
 /// Aggregated output of one full on-chain pipeline run.
 #[derive(Debug)]
@@ -54,7 +52,8 @@ pub struct OnchainResult {
 ///
 /// Returns `Err` if the balance query or Jupiter API call fails.
 pub async fn execute_pipeline(cfg: &Config, amount: f64) -> Result<OnchainResult> {
-    let signer = LocalSolanaSigner::ephemeral(format!("hft-task-{:016x}", random::<u64>()));
+    let signer =
+        LocalSolanaSigner::ephemeral(format!("hft-task-{:016x}", rand::rng().random::<u64>()));
     let signer_pubkey = signer.pubkey().to_string();
 
     info!(%signer_pubkey, "[ONCHAIN] SignerContext: task-local signer loaded");

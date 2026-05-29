@@ -36,7 +36,7 @@ isolation audit log, and full `rig-core` PEV-loop governance.
 - Implemented `clap`-driven CLI with `--mode [full|balance|quote|signer]` and
   `--wallet` / `--amount` flags, matching the `polar-bear-rig-hft` UX pattern.
 - Applied the full tooling stack: `rustfmt.toml` (100 cols, 2024 edition),
-  `.clippy.toml` (MSRV 1.85.0, complexity thresholds), `[lints]` table,
+  `.clippy.toml` (MSRV 1.93.1, complexity thresholds), `[lints]` table,
   `[package.metadata.docs.rs]`.
 
 ### Result

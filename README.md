@@ -2,11 +2,11 @@
 
 **rig-onchain-kit Agent: Solana Balance → Jupiter Swap (dry-run) → SignerContext Isolation**
 
-[![Rust](https://img.shields.io/badge/rust-1.85.0+-orange)](https://www.rust-lang.org/)
+[![Rust](https://img.shields.io/badge/rust-1.93.1+-orange)](https://www.rust-lang.org/)
 [![Edition](https://img.shields.io/badge/Edition-2024-blue)](https://doc.rust-lang.org/edition-guide/)
-[![rig-core](https://img.shields.io/badge/rig--core-0.36+-purple)](https://rig.rs)
+[![rig-core](https://img.shields.io/badge/rig--core-0.37+-purple)](https://rig.rs)
 [![Solana](https://img.shields.io/badge/Solana-Devnet-9945FF)](https://solana.com)
-[![License: PBS](https://img.shields.io/badge/license-PBS-blue)](LICENSE-PBS)
+[![License](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue)](LICENSE-MIT)
 
 > Built by **[Murtaza Ali Imtiaz](https://github.com/murtazaai)** · Technology Lead · Polar Bear Systems · July 2019–Present
 
@@ -87,7 +87,7 @@ and returns a clear error if it is missing.
 
 | Layer | Technology |
 |---|---|
-| AI Agent Framework | [rig-core](https://crates.io/crates/rig-core) (Rig / ARC) ≥ 0.36 |
+| AI Agent Framework | [rig-core](https://crates.io/crates/rig-core) (Rig / ARC) ≥ 0.37 |
 | On-chain bridge | rig-onchain-kit pattern (`tokio::task_local!` SignerContext) |
 | Async runtime | Tokio |
 | Blockchain | Solana (devnet) |
@@ -101,7 +101,7 @@ and returns a clear error if it is missing.
 ## Build & run
 
 ```bash
-# Prerequisites: Rust 1.85.0+ (rustup.rs)
+# Prerequisites: Rust 1.93.1+ (rustup.rs)
 git clone https://github.com/murtazaai/polar-bear-rig-onchain
 cd polar-bear-rig-onchain
 
@@ -251,8 +251,10 @@ trade its own isolated signing context with zero locking overhead.
 
 ## License
 
-Proprietary - © 2026 Murtaza Ali Imtiaz / Polar Bear Systems  
-See [LICENSE-PBS](LICENSE-PBS) for permitted use.
+Dual-licensed under **MIT OR Apache-2.0**.
+
+- [LICENSE-MIT](LICENSE-MIT)
+- [LICENSE-APACHE](LICENSE-APACHE)
 
 ---
 

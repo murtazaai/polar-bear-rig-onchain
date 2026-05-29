@@ -24,7 +24,7 @@ async fn test_anthropic_client_builds_with_valid_key() {
         .anthropic_api_key
         .as_deref()
         .expect("ANTHROPIC_API_KEY must be set for this test");
-    let result = rig::providers::anthropic::Client::new(api_key);
+    let result = rig_core::providers::anthropic::Client::new(api_key);
     assert!(
         result.is_ok(),
         "Client::new must succeed with a valid API key"
@@ -35,7 +35,7 @@ async fn test_anthropic_client_builds_with_valid_key() {
 #[tokio::test]
 #[ignore = "requires ANTHROPIC_API_KEY - run with --ignored"]
 async fn test_agent_returns_non_empty_response() {
-    use rig::{
+    use rig_core::{
         client::{CompletionClient, ProviderClient},
         completion::Prompt,
         providers::anthropic,

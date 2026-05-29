@@ -8,15 +8,15 @@
 //! | [`JupiterQuoteTool`] | `jupiter_quote` | Dry-run SOL → USDC quote |
 //! | [`SignerIsolationTool`] | `signer_isolation_log` | Snapshot active `SignerContext` |
 //!
-//! ## Rig client trait requirements (rig-core ≥ 0.36)
+//! ## Rig client trait requirements (rig-core ≥ 0.37)
 //!
 //! The [`Tool`] trait uses `async fn` in trait syntax stabilised in Rust 1.75.
-//! [`rig::client::CompletionClient`] must be in scope to call `.agent()` on a
-//! rig-core 0.36+ Anthropic client - otherwise `E0599: no method named 'agent'`.
+//! [`rig_core::client::CompletionClient`] must be in scope to call `.agent()` on a
+//! rig-core 0.37+ Anthropic client - otherwise `E0599: no method named 'agent'`.
 
 use std::sync::Arc;
 
-use rig::{
+use rig_core::{
     completion::ToolDefinition,
     tool::{Tool, ToolError},
 };
