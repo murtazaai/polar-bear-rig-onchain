@@ -29,14 +29,17 @@ use std::sync::Arc;
 
 use anyhow::{Context, Result};
 use rig_core::{
-    client::{CompletionClient, ProviderClient},
+    client::CompletionClient,
+    // client::ProviderClient,
     completion::Prompt,
     providers::anthropic,
 };
-
-use crate::config::Config;
-use crate::onchain::{balance::SolanaClient, jupiter::JupiterClient};
 use tools::{JupiterQuoteTool, SignerIsolationTool, SolanaBalanceTool};
+
+use crate::{
+    config::Config,
+    onchain::{balance::SolanaClient, jupiter::JupiterClient},
+};
 
 /// System preamble for the on-chain agent.
 ///

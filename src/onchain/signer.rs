@@ -23,7 +23,7 @@
 use std::sync::Arc;
 
 use anyhow::Result;
-
+use rand::Rng;
 use serde::Serialize;
 use solana_sdk::{
     pubkey::Pubkey,

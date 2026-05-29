@@ -12,11 +12,12 @@
 //! SignerContext::install → [ SolanaClient::query_balance ] → JupiterClient
 //! ```
 
+use std::str::FromStr;
+
 use anyhow::{Context, Result};
 use serde::Serialize;
 use solana_client::rpc_client::RpcClient;
 use solana_sdk::pubkey::Pubkey;
-use std::str::FromStr;
 use tracing::info;
 
 use crate::onchain::types::Lamports;

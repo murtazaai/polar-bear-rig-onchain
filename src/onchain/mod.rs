@@ -23,6 +23,7 @@ pub mod types;
 use anyhow::Result;
 use balance::{BalanceResult, SolanaClient};
 use jupiter::{DEFAULT_SLIPPAGE_BPS, JupiterClient, JupiterQuote, SOL_MINT, USDC_MINT};
+use rand::Rng;
 use signer::{LocalSolanaSigner, with_signer};
 use tracing::info;
 use types::Lamports;

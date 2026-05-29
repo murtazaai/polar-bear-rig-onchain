@@ -21,18 +21,15 @@
 //!
 //! ## Full pipeline
 //!
-//! 1. **`SignerContext`** ([`onchain::signer`]) - a random ephemeral keypair is
-//!    bound to the current Tokio task via `tokio::task_local!`. The
-//!    `onchain::signer::SignerGuard` RAII wrapper guarantees the context is
-//!    evicted even if the task panics.
-//! 2. **Balance query** ([`onchain::balance`]) - Solana devnet RPC
-//!    `get_balance` call; returns lamports and SOL denomination.
-//! 3. **Jupiter quote** ([`onchain::jupiter`]) - read-only GET to the Jupiter
-//!    V6 `/quote` endpoint; `dry_run = true` is baked in and a runtime
-//!    `assert!` prevents any accidental swap execution.
-//! 4. **Isolation log** ([`onchain::signer`]) - `SignerContext::snapshot()`
-//!    emits an [`onchain::signer::SignerSnapshot`] for the Reactor GUI audit
-//!    trail.
+//! 1. **`SignerContext`** ([`onchain::signer`]) - a random ephemeral keypair is bound to the
+//!    current Tokio task via `tokio::task_local!`. The `onchain::signer::SignerGuard` RAII wrapper
+//!    guarantees the context is evicted even if the task panics.
+//! 2. **Balance query** ([`onchain::balance`]) - Solana devnet RPC `get_balance` call; returns
+//!    lamports and SOL denomination.
+//! 3. **Jupiter quote** ([`onchain::jupiter`]) - read-only GET to the Jupiter V6 `/quote` endpoint;
+//!    `dry_run = true` is baked in and a runtime `assert!` prevents any accidental swap execution.
+//! 4. **Isolation log** ([`onchain::signer`]) - `SignerContext::snapshot()` emits an
+//!    [`onchain::signer::SignerSnapshot`] for the Reactor GUI audit trail.
 //!
 //! ## Quick start
 //!

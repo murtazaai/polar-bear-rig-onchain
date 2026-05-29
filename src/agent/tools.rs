@@ -24,11 +24,11 @@ use serde::{Deserialize, Serialize};
 use serde_json::json;
 use tracing::info;
 
-use crate::onchain::types::Lamports;
 use crate::onchain::{
     balance::{BalanceResult, SolanaClient},
     jupiter::{DEFAULT_SLIPPAGE_BPS, JupiterClient, JupiterQuote, SOL_MINT, USDC_MINT},
     signer::{SignerSnapshot, snapshot_active},
+    types::Lamports,
 };
 
 // ── Tool 1: Solana balance ────────────────────────────────────────────────────

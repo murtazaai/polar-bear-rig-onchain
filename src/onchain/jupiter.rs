@@ -81,8 +81,7 @@ impl JupiterClient {
     ///
     /// * `input_mint`   - Base-58 mint address of the token being sold.
     /// * `output_mint`  - Base-58 mint address of the token being bought.
-    /// * `amount`       - Amount in the smallest unit of `input_mint`
-    ///   (lamports for SOL).
+    /// * `amount`       - Amount in the smallest unit of `input_mint` (lamports for SOL).
     /// * `slippage_bps` - Allowed slippage in basis points (100 bps = 1 %).
     ///
     /// # Panics

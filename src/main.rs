@@ -27,11 +27,10 @@ use std::sync::Arc;
 
 use anyhow::Result;
 use clap::{Parser, ValueEnum};
+use polar_bear_rig_onchain::{agent, config::Config, onchain};
 use rig_core::completion::Prompt;
 use tracing::info;
 use tracing_subscriber::EnvFilter;
-
-use polar_bear_rig_onchain::{agent, config::Config, onchain};
 
 // ── CLI ───────────────────────────────────────────────────────────────────────
 
@@ -210,8 +209,10 @@ async fn run_balance(cfg: &Config) -> Result<()> {
 
 /// Quote-only mode: fetch a Jupiter dry-run quote and print it. No API key needed.
 async fn run_quote(cfg: &Config, amount: f64) -> Result<()> {
-    use onchain::jupiter::{DEFAULT_SLIPPAGE_BPS, JupiterClient, SOL_MINT, USDC_MINT};
-    use onchain::types::Lamports;
+    use onchain::{
+        jupiter::{DEFAULT_SLIPPAGE_BPS, JupiterClient, SOL_MINT, USDC_MINT},
+        types::Lamports,
+    };
 
     let _ = cfg; // wallet not needed for price discovery
     let client = JupiterClient::dry_run();
