@@ -1,0 +1,169 @@
+name: CI
+
+on:
+    push:
+        branches: ["main", "master"]
+    pull_request:
+        branches: ["main", "master"]
+
+env:
+    CARGO_TERM_COLOR: always
+    RUST_BACKTRACE: 1
+
+jobs:
+    # ── Job 1: Format ────────────────────────────────────────────────────────────
+    fmt:
+        name: Format
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Install Rust (stable + rustfmt)
+              uses: dtolnay/rust-toolchain@stable
+              with:
+                  toolchain: "1.93.1"
+                  components: rustfmt
+
+            - name: cargo fmt --check
+              run: cargo fmt --all -- --check
+
+    # ── Job 2: Clippy ────────────────────────────────────────────────────────────
+    clippy:
+        name: Clippy
+        runs-on: ubuntu-latest
+        needs: fmt
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Install Rust (stable + clippy)
+              uses: dtolnay/rust-toolchain@stable
+              with:
+                  toolchain: "1.93.1"
+                  components: clippy
+
+            - name: Cache cargo registry
+              uses: actions/cache@v4
+              with:
+                  path: |
+                      ~/.cargo/registry
+                      ~/.cargo/git
+                      target
+                  key: ${{ runner.os }}-cargo-clippy-${{ hashFiles('**/Cargo.lock') }}
+                  restore-keys: ${{ runner.os }}-cargo-clippy-
+
+            - name: cargo clippy -D warnings
+              run: cargo clippy --all-targets -- -D warnings
+
+    # ── Job 3: Build ─────────────────────────────────────────────────────────────
+    build:
+        name: Build
+        runs-on: ubuntu-latest
+        needs: fmt
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Install Rust
+              uses: dtolnay/rust-toolchain@stable
+              with:
+                  toolchain: "1.93.1"
+
+            - name: Cache cargo registry
+              uses: actions/cache@v4
+              with:
+                  path: |
+                      ~/.cargo/registry
+                      ~/.cargo/git
+                      target
+                  key: ${{ runner.os }}-cargo-build-${{ hashFiles('**/Cargo.lock') }}
+                  restore-keys: ${{ runner.os }}-cargo-build-
+
+            - name: cargo build --release
+              run: cargo build --release
+
+    # ── Job 4: Test ──────────────────────────────────────────────────────────────
+    test:
+        name: Test
+        runs-on: ubuntu-latest
+        needs: build
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Install Rust
+              uses: dtolnay/rust-toolchain@stable
+              with:
+                  toolchain: "1.93.1"
+
+            - name: Cache cargo registry
+              uses: actions/cache@v4
+              with:
+                  path: |
+                      ~/.cargo/registry
+                      ~/.cargo/git
+                      target
+                  key: ${{ runner.os }}-cargo-test-${{ hashFiles('**/Cargo.lock') }}
+                  restore-keys: ${{ runner.os }}-cargo-test-
+
+            - name: cargo test (no API key needed)
+              # Live provider tests are #[ignore]-gated and never run in CI.
+              # SKIP_LLM=1 is the correct way to suppress agent calls — never
+              # pass --skip-llm via args (the test harness rejects unknown flags).
+              run: cargo test --all-targets
+              env:
+                  RUST_LOG: polar_bear_rig_onchain=debug
+
+    # ── Job 5: Doc ───────────────────────────────────────────────────────────────
+    doc:
+        name: Docs
+        runs-on: ubuntu-latest
+        needs: build
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Install Rust
+              uses: dtolnay/rust-toolchain@stable
+              with:
+                  toolchain: "1.93.1"
+
+            - name: Cache cargo registry
+              uses: actions/cache@v4
+              with:
+                  path: |
+                      ~/.cargo/registry
+                      ~/.cargo/git
+                      target
+                  key: ${{ runner.os }}-cargo-doc-${{ hashFiles('**/Cargo.lock') }}
+                  restore-keys: ${{ runner.os }}-cargo-doc-
+
+            - name: cargo doc --no-deps (warnings as errors)
+              # Matches [package.metadata.docs.rs] rustdoc-args in Cargo.toml.
+              run: cargo doc --no-deps
+              env:
+                  RUSTDOCFLAGS: "--cfg docsrs -D warnings"
+
+    # ── Job 6: MSRV ──────────────────────────────────────────────────────────────
+    msrv:
+        name: MSRV (1.93.1)
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Install Rust MSRV (1.93.1)
+              uses: dtolnay/rust-toolchain@stable
+              with:
+                  toolchain: "1.93.1"
+
+            - name: Cache cargo registry
+              uses: actions/cache@v4
+              with:
+                  path: |
+                      ~/.cargo/registry
+                      ~/.cargo/git
+                      target
+                  key: ${{ runner.os }}-cargo-msrv-${{ hashFiles('**/Cargo.lock') }}
+                  restore-keys: ${{ runner.os }}-cargo-msrv-
+
+            - name: cargo build on MSRV
+              run: cargo build
+
+            - name: cargo test on MSRV
+              run: cargo test --all-targets
