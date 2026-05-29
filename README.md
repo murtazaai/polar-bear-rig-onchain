@@ -2,6 +2,8 @@
 
 **rig-onchain-kit Agent: Solana Balance → Jupiter Swap (dry-run) → SignerContext Isolation**
 
+[![Crates.io](https://img.shields.io/crates/v/polar-bear-rig-onchain.svg)](https://crates.io/crates/polar-bear-rig-onchain)
+[![Docs.rs](https://docs.rs/polar-bear-rig-onchain/badge.svg)](https://docs.rs/polar-bear-rig-onchain)
 [![Rust](https://img.shields.io/badge/rust-1.93.1+-orange)](https://www.rust-lang.org/)
 [![Edition](https://img.shields.io/badge/Edition-2024-blue)](https://doc.rust-lang.org/edition-guide/)
 [![rig-core](https://img.shields.io/badge/rig--core-0.37+-purple)](https://rig.rs)
