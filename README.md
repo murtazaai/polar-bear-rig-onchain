@@ -10,7 +10,7 @@
 [![Solana](https://img.shields.io/badge/Solana-Devnet-9945FF)](https://solana.com)
 [![License](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue)](LICENSE-MIT)
 
-> Built by **[Murtaza Ali Imtiaz](https://github.com/murtazaai)** · Technology Lead · Polar Bear Systems · July 2019–Present
+> Built by [Murtaza Ali Imtiaz](https://github.com/murtazaai) · Technology Lead · **Polar Bear Systems** · July 2019 – Present
 
 A production-grade Rust implementation of the `rig-onchain-kit` on-chain agent pattern, powered
 by [Rig (ARC)](https://rig.rs). Demonstrates Solana devnet balance queries, Jupiter V6 dry-run
@@ -253,17 +253,20 @@ trade its own isolated signing context with zero locking overhead.
 
 ## License
 
-Dual-licensed under **MIT OR Apache-2.0**.
+Proprietary - © 2026 Murtaza Ali Imtiaz / Polar Bear Systems  
+See [LICENSE-PBS](LICENSE-PBS) for permitted use.
 
-- [LICENSE-MIT](LICENSE-MIT)
-- [LICENSE-APACHE](LICENSE-APACHE)
+Licensed under:
+
+- [MIT License](LICENSE-MIT)
+- [Apache License, Version 2.0](LICENSE-APACHE)
 
 ---
 
 ## Author
 
-**Murtaza Ali Imtiaz**
+**Murtaza Ali Imtiaz** · Technology Lead · **Polar Bear Systems** · (July 2019 – Present)
 
-- LinkedIn: [linkedin.com/in/murtazai](https://linkedin.com/in/murtazai)
 - GitHub: [@murtazaai](https://github.com/murtazaai)
+- LinkedIn: [linkedin.com/in/murtazai](https://linkedin.com/in/murtazai)
 - Portfolio: [murtazai.com](https://murtazai.com)
