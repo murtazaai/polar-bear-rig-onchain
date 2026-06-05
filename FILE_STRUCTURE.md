@@ -10,7 +10,7 @@ polar-bear-rig-onchain/
 ├── .clippy.toml           Clippy config (MSRV 1.93.1, complexity thresholds)
 ├── .gitignore             Focused Rust-only ignore file
 ├── .env.example           Template for ANTHROPIC_API_KEY and other env vars
-├── LICENSE-PBS            Polar Bear Systems proprietary licence
+├── LICENSE-PBS            Polar Bear (🍨) proprietary licence
 ├── README.md              Project overview and quick-start
 ├── CHANGELOG.md           Version history (all bug fixes documented)
 ├── CONTRIBUTING.md        Dev setup, workflow, code-style, test instructions

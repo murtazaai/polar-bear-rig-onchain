@@ -4,7 +4,7 @@
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────┐
-│              polar-bear-rig-onchain  ·  Polar Bear Systems               │
+│              polar-bear-rig-onchain  ·  Polar Bear (🍨)               │
 │         rig-onchain-kit  ·  SignerContext  ·  Solana devnet              │
 └──────────────────────────────────────────────────────────────────────────┘
 

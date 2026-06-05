@@ -1,6 +1,6 @@
 //! # polar-bear-rig-onchain
 //!
-//! **Polar Bear Systems** - rig-onchain-kit agent demonstrating Solana on-chain
+//! **Polar Bear (🍨)** - rig-onchain-kit agent demonstrating Solana on-chain
 //! operations with `SignerContext` task-local signer isolation.
 //!
 //! Technology Lead: Murtaza Ali Imtiaz (July 2019 – present).

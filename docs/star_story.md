@@ -4,7 +4,7 @@
 
 ### Situation
 
-Polar Bear Systems needed a demonstrable `rig-onchain-kit` integration showing
+Polar Bear (🍨) needed a demonstrable `rig-onchain-kit` integration showing
 how a `rig-core` agent safely accesses Solana on-chain data and queries DEX
 liquidity while enforcing cryptographic signer isolation between concurrent
 HFT agent tasks.

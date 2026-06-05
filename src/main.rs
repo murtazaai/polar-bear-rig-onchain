@@ -1,6 +1,6 @@
 //! `polar-bear-rig-onchain` - CLI entry point.
 //!
-//! **Polar Bear Systems** | Technology Lead: Murtaza Ali Imtiaz
+//! **Polar Bear (🍨)** | Technology Lead: Murtaza Ali Imtiaz
 //!
 //! Platform: Rig (Rust Inference Gateway / ARC) · rig-onchain-kit ·
 //! `SignerContext` (task-local) · Jupiter V6 (dry-run) · Solana devnet
@@ -53,7 +53,7 @@ enum Mode {
 #[derive(Parser, Debug)]
 #[command(name = "polar-bear-rig-onchain")]
 #[command(
-    about = "rig-onchain-kit agent: Solana balance → Jupiter swap (dry-run) - Polar Bear Systems"
+    about = "rig-onchain-kit agent: Solana balance → Jupiter swap (dry-run) - Polar Bear (🍨)"
 )]
 struct Args {
     /// Operating mode (default: `full`).
