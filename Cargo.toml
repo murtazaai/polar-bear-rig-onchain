@@ -1,6 +1,6 @@
 [package]
 name        = "polar-bear-rig-onchain"
-version     = "0.7.0"
+version     = "0.7.1"
 edition     = "2024"
 rust-version = "1.93.1"
 description = "rig-onchain-kit agent: Solana balance query → Jupiter swap (dry-run) → SignerContext isolation. Testnet only."
