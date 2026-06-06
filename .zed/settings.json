@@ -50,13 +50,22 @@
     "lsp": {
         "rust-analyzer": {
             "initialization_options": {
-                // ── Check / diagnostics ───────────────────────────────────────────
-                // Run clippy on save instead of cargo check so Zed's Problems panel
-                // mirrors the "clippy" task. Flags match Cargo.toml [lints.clippy]
-                // and the "clippy" task in tasks.json.
+                // Run clippy (not cargo check) on save to match [lints.clippy] in Cargo.toml.
+                // pedantic + all with the same allow-list as .clippy.toml.
                 "check": {
                     "command": "clippy",
-                    "extraArgs": ["--all-targets", "--", "-D", "warnings"],
+                    "extraArgs": [
+                        // "--all-targets",
+                        "--",
+                        "-D",
+                        "warnings",
+                        "-A",
+                        "clippy::module_name_repetitions",
+                        "-A",
+                        "clippy::must_use_candidate",
+                        "-A",
+                        "clippy::missing_errors_doc",
+                    ],
                 },
 
                 // ── Cargo ─────────────────────────────────────────────────────────
